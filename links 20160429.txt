@@ -1,0 +1,92 @@
+http://www.codeproject.com/Articles/29755/Introducing-Lucene-Net
+Lucene.Net is a high performance Information Retrieval (IR) library, also known as a search engine library. Lucene.Net contains powerful APIs for creating full text indexes and implementing advanced and precise search technologies into your programs. 
+
+
+https://www.youtube.com/watch?v=RguV2NzwshE
+https://www.youtube.com/watch?v=HXIV3vFj2Bg
+Fiddler
+
+
+http://code.tutsplus.com/courses/aspnet-at-your-service-web-api
+
+
+
+http://exception238.rssing.com/chan-21693109/all_p2.html
+http://johnatten.com/2013/08/21/customizing-routes-in-asp-net-mvc/
+
+
+
+
+
+To Register a user
+-----------------------------------------------
+
+http://localhost:49724/api/Account/Register
+GET
+User-Agent: Fiddler
+Host: localhost:49724
+Content-Type: application/json; charset=utf-8
+Content-Length: 96
+
+Request Body
+--------------
+{
+  "Email": "arvind@gmail.com",
+  "Password": "Sample@2",
+  "ConfirmPassword": "Sample@2"
+}
+
+{
+  "Email": "arvind1@yahoo.com",
+  "Password": "TestData@123",
+  "ConfirmPassword": "TestData@123"
+}
+
+
+
+Request to get Token
+--------------------------------------------------------------
+URL and header
+----------------
+http://localhost:49724/Token
+User-Agent: Fiddler
+Host: localhost:49724
+Content-Type: application/json; charset=utf-8
+Content-Length: 68
+POST
+Request Body
+------------
+grant_type=password&username=arvind1@yahoo.com&password=TestData@123
+
+
+Response
+---------
+{"access_token":"ggqCZ_qeKkBjqpWbJoxD0C1T1Qp4B1Hjzi2fUeYUQKZx5AKysFvl3S-RnCHLBBmZuLBAFykIHa-uOyEnUxsYY4DjrLSb9my-hy2dIRgd3orFQbPdGC4pgaOe98IlEP-16GiqeWjURs8AMSh0fVUkw-h8uca20hgL53prCmM_ivRiSVai192LatRA_49kNlYX6JtxnWCyOgiDbzqr08oQjf6UO_KnBGJsSOle_hhmnvmLY9Hc0n_wqJnpIXV_xShR0uo3T5xQYotPFwhD8Qa9Oi_-OpSq7VWFdyDCfLoFX2c0YPM-W9SQnncpdK_6hUwt695w4uhTVlSpEwuVX0pUjPi-diAFXfeyKyrapqp665QR7iortAFzgeP213M8a5dfzn8j7I1TKUVCpAEgikz95vxN1-gle8Lie2Cd-FqmnOaSG96h95oRGWBwDUrDAmAXm7OYwFyYm764f13UT5unzM5set919C59hKGbzx_x7X2Zy43gxTPFUZMlhKhjtG2c","token_type":"bearer","expires_in":1209599,"userName":"arvind1@yahoo.com",".issued":"Wed, 04 May 2016 10:21:32 GMT",".expires":"Wed, 18 May 2016 10:21:32 GMT"}
+grant_type=password&username=arvind1@yahoo.com&password=TestData@123
+
+
+
+To get the service with token passing
+--------------------------------------------------------------
+http://localhost:49724/api/Values
+GET
+Authorization: Bearer ggqCZ_qeKkBjqpWbJoxD0C1T1Qp4B1Hjzi2fUeYUQKZx5AKysFvl3S-RnCHLBBmZuLBAFykIHa-uOyEnUxsYY4DjrLSb9my-hy2dIRgd3orFQbPdGC4pgaOe98IlEP-16GiqeWjURs8AMSh0fVUkw-h8uca20hgL53prCmM_ivRiSVai192LatRA_49kNlYX6JtxnWCyOgiDbzqr08oQjf6UO_KnBGJsSOle_hhmnvmLY9Hc0n_wqJnpIXV_xShR0uo3T5xQYotPFwhD8Qa9Oi_-OpSq7VWFdyDCfLoFX2c0YPM-W9SQnncpdK_6hUwt695w4uhTVlSpEwuVX0pUjPi-diAFXfeyKyrapqp665QR7iortAFzgeP213M8a5dfzn8j7I1TKUVCpAEgikz95vxN1-gle8Lie2Cd-FqmnOaSG96h95oRGWBwDUrDAmAXm7OYwFyYm764f13UT5unzM5set919C59hKGbzx_x7X2Zy43gxTPFUZMlhKhjtG2c
+Host: localhost:49724
+
+
+
+
+
+
+
+{"access_token":
+"
+NXdZE854ssc0J0R_fPDYJKBFOk68L74OioVreE1DX6rci6PRyrEuiuARzWPY1ziRzwHakaJvlvZgZ3-gvDkv7FowVii40koIbaDOKnstsi-yCEuZhnNhPsuFgns44ygV1F298Iy9aEM-JBJlPesTLvwA98LiIyze7356MBQa2f0JpN73E7h0RZN-yf_pGqnSeGjFu0DAdMMGWtN_vlAV9-9os0Q0WnPdGkayGCW_wYoDzKsd3NQ2de0nSYuujR5jQo2iVSYvwDNVjGDia-ZZiwnjEXsub0M65VCKH5GCePdT6HOhtQu5ZhRfcRq_QvP30WTW1GpCyEhtjuOfDCevpNIHr_Y7dSqbN8UaqZpkbhishAHmEz-RGb4mAIXmN3YLaTT14v-TPIASzI5IAbe2ripjcq-GYimwWhTxWBtfKCqg3kltaGt4oVvB6sMIAxkGiyzJFZZAZ72QNXNykrP1neyvWuDNRNLpv37VCftMkHw
+"
+,"token_type":"bearer","expires_in":1799}
+
+
+
+
+
+

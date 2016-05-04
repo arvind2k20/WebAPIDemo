@@ -1,0 +1,230 @@
+* Difference between Dynamic and Var keyword in context of LINQ
+* Anonymous methods and Class (Framework 2.0)
+* Types of LINQ Operations/Queries (=>queries and functions)
+* Collection Types IEnumerable<T> or IQueryable<T>
+* How to create local variable in LINQ Queries
+[You can use local variables in LINQ queries in order to improve the readability of your queries. Local variables are created using the let <<localname>> = <<expression>> syntax inside the LINQ query.
+		let title = b.Title 
+]
+* Extension Methods  [LINQ]
+  Static methods that are declared outside the class and can be called through object instances. Part of .net 3.0 framework
+
+
+* Can we assign null type to var datatype during declaration
+* Can we declared var without initialization.
+// invalid var statements
+var v;
+var nu = null;
+var v2 = "12"; v2 = 3;
+
+
+
+// valid var statements
+var x = "1";
+var n = 0;
+string s = "string";
+var s2 = s;
+s2 = null;
+string s3 = null;
+var s4 = s3;
+
+* Automatic properties
+
+public string ProductName { get; set; }
+When Visual Studio compiles this statement, it will automatically create a private member variable productName and use the old style's get/set methods to define the property. This could save lots of typing.
+Interestingly, later on, if you find you need to add logic to the get/set methods, you can still convert this automatic property to the old style's property.
+public class Product
+{
+    public int ProductID { get; set; }
+    public string ProductName { get; set; }
+    public decimal UnitPrice { get; set; }
+}
+
+* Object initializer
+In the past, we couldn't initialize an object without using a constructor. For example, we could create and initialize a Product object like this, if the Product class has a constructor with three parameters:
+
+Product p = new product(1, "first candy", 100.0);
+Now with the new object initializer feature, we can do it as follows:
+
+Product product = new Product
+{
+    ProductID = 1,
+    ProductName = "first candy",
+    UnitPrice = (decimal)100.0
+};
+
+We can also define and initialize a variable with an array like this:
+
+var arr = new[] { 1, 10, 20, 30 };
+This array is called an implicitly typed array.
+
+* Collection initializer
+Similar to the object initializer, we can also initialize a collection when we declare it, like this:
+
+
+* Anonymous types
+With the new feature of the object initializer, and the new var data type, we can create anonymous data types easily in C# 3.0.
+
+For example, if we define a variable like this:
+
+
+var a = new { Name = "name1", Address = "address1" };
+At compile time, the compiler will actually create an anonymous type as follows:
+
+
+If two anonymous types have the same members with the same data types in their initializers, then these two variables have the same types. For example, if there is another variable defined like this:
+
+
+var b = new { Name = "name2", Address = "address2" };
+Then we can assign a to b like this:
+
+
+b = a;
+The anonymous type is particularly useful for LINQ when the result of LINQ can be shaped to be whatever you like.
+
+
+
+
+
+* Extension Methods
+Extension Methods are static methods that can be invoked using the instance method syntax. In effect, Extension Methods make it possible for us to extend existing types and construct types with additional methods.
+
+For example, we can define an Extension Method as follows:
+
+public static class MyExtensions
+{
+    public static bool IsCandy(this Product p)
+    {
+        if (p.ProductName.IndexOf("candy") >= 0)
+            return true;
+        else
+            return false;
+    }
+}
+
+In this example, the static method IsCandy takes a this parameter of Product type, and searches for the word candy inside the product name. If it finds a match, it assumes this is a candy product and returns true. Otherwise, it returns false, meaning this is not a candy product.
+
+Since all Extension Methods must be defined in top level static classes, to simplify the example, we put this class inside the same namespace as our main test application, TestNewFeaturesApp, and make this class on the same level as the Program class so it is a top level class. Now, in the program, we can call this Extension Method like this:
+
+if (product.IsCandy())
+    Console.WriteLine("yes, it is a candy");
+else
+    Console.WriteLine("no, it is not a candy");
+
+
+
+
+* Lambda expressions
+With the C# 3.0 new Extension Method feature, and the C# 2.0 new anonymous method (or inline method) feature, Visual Studio has introduced a new expression called lambda expression.
+
+Lambda expression is actually a syntax change for anonymous methods. It is just a new way of writing anonymous methods. 
+
+
+
+* LINQ Query Syntax
+With built-in LINQ Extension Methods and lambda expressions, Visual Studio allows us to write SQL-like statements in C# when invoking these methods. The syntax of these statements is called LINQ query syntax, and the expression in query syntax is called a query expression.
+
+var veges6 = products.Where(p => p.ProductName.Contains("vegetable"));
+
+
+Not only is query syntax easy to read and write, Visual Studio actually provides complete intellisense and compile-time checking support for query syntax.
+
+In general, query syntax is recommended over method syntax because it is usually simpler, and more readable. However, there is no semantic difference between method syntax and query syntax.
+
+
+****SQL Query Analyzer -> To review
+
+
+* Built-in LINQ operators
+As we have seen in the previous sections, there are no semantic differences between method syntax and query syntax. In addition, some queries, such as those that retrieve the number of elements matching a specified condition, or those that retrieve the element that has the maximum value in a source sequence, can be expressed only as method calls. These kinds of methods are sometimes referred to as .NET Standard Query Operators and include Take, ToList, FirstOrDefault, Max, and Min.
+
+In addition to those methods that can only be expressed as method calls, all the Extension Methods that can be used in either query syntax or method syntax are also defined as standard query operators such as select, where, and from. So, the .NET Standard Query Operators contain all of the LINQ-related methods.
+
+A complete list of these operators can be found at Microsoft MSDN library for the class System.Linq.Enumerable.
+
+The methods in this static class provide an implementation of the standard query operators for querying data sources that implement IEnumerable<(Of <(T>)>). The standard query operators are general-purpose methods that follow the LINQ pattern and enable you to express traversal, filter, and projection operations over data in any .NET-based programming language.
+
+The majority of the methods in this class are defined as Extension Methods that extend IEnumerable<(Of <(T>)>). This means that they can be called like an instance method on any object that implements IEnumerable<(Of <(T>)>).
+
+
+
+
+
+
+http://www.codeproject.com/Articles/199060/Introducing-LINQ-Language-Integrated-Query
+
+
+
+
+---------------------------------------------------------------------------------------
+
+http://www.codeproject.com/Articles/286255/Using-LINQ-Queries
+
+Language INtegrated Queries are S
+
+
+QL-like C# queries that can be used to manipulate collections of objects.LINQ is a set of C# functions, classes, and operators that enable developers to execute queries against a collections of objects. True LINQ queries are executed against collections. There are a lot of extensions of LINQ that translate queries to SQL, XML/XPath, REST, etc. 
+There are two forms of LINQ operations - queries and functions. You can see more details about them in the following sections.
+
+
+from book in myBooks
+    where book.Price < 500
+    select book.Title
+
+
+Functions
+
+LINQ adds a set of useful function that can be applied to collections.
+All LINQ queries are executed on the collections of type IEnumerable<T> or IQueryable<T>, and as results are returned as new collections (IEnumerable<T>), objects, or simple types. Examples of LINQ queries or functions that return collections are:
+
+
+IEnumerable<T> myBooks = allBooks.Except(otherBooks); 
+IEnumerable<string> titles = myBooks.Where(book=>book.Price<500)
+                                    .Select(book=>book.Title);
+int count = titles.Count();
+
+
+
+Examples :- 
+from book in myBooks
+            where book.Price < 500
+            select book.Title
+
+myBooks
+       .Where(book=>book.Price<500)
+       .Select(book=>book.Title);
+
+
+Dynamic LINQ
+LINQ queries and functions return either classes or collections of classes. In most cases, you will use existing domain classes (Book, Author, Publisher, etc.) in the return types of queries. However, in some cases you might want to return custom classes that do not exist in your class model. As an example, you might want to return only the ISBN and title of the book, and therefore you do not want to return an entire Book object with all properties that you do not need at all. A similar problem will be if you want to return fields from different classes (e.g., if you want to return the title of the book and name of publisher).
+
+In this case, you do not need to define new classes that contain only fields you want to use as return values. LINQ enables you to return so called "anonymous classes" - dynamically created classes that do not need to be explicitly defined in your class model. An example of such a kind of query is shown in the following example:
+
+var items = from b in books
+select new { Title: b.Title,
+             ISBN: b.ISBN
+           };
+
+
+dynamic items = from b in books
+        select new { Title: b.Title,
+                     ISBN: b.ISBN
+                   };
+
+
+Many people think that this is a bad practice because we have used objects here without type. This is not true - the items variable does have a type, however the type is not defined in some file. However, you have everything you need from the typed object:
+
+* Compile-time syntax check - if you make some error in typing (e.g., put ISBN instead of ISBN), the compiler will show you warning and abort compilation
+* Intellisense support - Visual Studio will show you a list of properties/methods of the object as it does for regular objects.
+
+
+However, there is a way to use untyped objects in .NET. If you replace the keyword var with the keyword dynamic, the variable items will be truly untyped. An example is shown in the following listing:
+
+
+
+Although var is better than dynamic (always use var where it is possible), there are some cases where you will be forced to use dynamic instead of var. As an example, if you want to return the result of some LINQ query as a return value of a method you cannot declare the return type of the method as var because the scope of the anonymous class ends in the method body. In that case you will need to either define an explicit class or declare the return value as dynamic.
+
+Lambda Expressions
+---------------------------
+While you are working with LINQ, you will find some "weird syntax" in the form x => y.
+
