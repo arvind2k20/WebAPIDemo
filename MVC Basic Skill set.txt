@@ -1,0 +1,46 @@
+
+What is MVC?
+Getting Started with MVC 5.0.
+Understanding Models, Views and Controllers.
+Create MVC Application (CRUD with EF).
+
+Routing in MVC.
+State Management in MVC (TempData / ViewBag / ViewData).
+Using HTML Helper Controls.
+
+1. Html.BeginForm.
+2. Html.EndForm.
+3. Html.TextBox.
+4. Html.TextArea.
+5. Html.Password.
+6. Html.Hidden.
+7. Html.CheckBox.
+8. Html.RadioButton.
+9. Html.DropDownList.
+10. Html.ListBox.
+
+
+How to Use Web Grid?
+CRUD Operations in Web Grid.
+
+What is Bundling in MVC?
+Using Area in MVC Web project Solution.
+Creating Application with Area.
+Using Partial Views in MVC.
+
+Using JQuery in MVC Views.
+Using $.Ajax () and Posting JSON Data.
+
+Validations in MVC.
+Working with Actions Filters in MVC.
+Windows Authentications.
+
+Form Authentication in MVC.
+Working with MVC Layout (Master Pages).
+
+Understanding what is DI (Dependency Injection)?
+IOC (Inversion of control) in MVC.
+
+Getting Started with ASP.NET Web API.
+Understanding GET, PUT, POST and DELETE.
+How to use Web API in MVC Application.
