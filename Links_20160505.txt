@@ -1,0 +1,62 @@
+To set basic authentication to a web api
+----------------------------------------------
+http://www.asp.net/web-api/overview/security/authentication-filters
+
+
+Authentication Filter in Asp.net web api
+http://www.asp.net/web-api/overview/security/authentication-filters
+
+
+
+Samples for demo
+http://aspnet.codeplex.com/sourcecontrol/latest#Samples/WebApi/BasicAuthentication/ReadMe.txt
+
+
+http://leastprivilege.com/2012/09/24/claimsidentity-isauthenticated-and-authenticationtype-in-net-4-5/
+
+
+http://stevescodingblog.co.uk/basic-authentication-with-asp-net-webapi/
+
+
+
+Short introduction to Basic Authentication
+We can all agree that Basic Authentication is dead simple for HTTP Servers and Clients. The Client just needs to send the given Username and Password Base64 encoded in the “Authorization” HTTP header like this:
+
+Authorization: Basic dXNlcm5hbWU6cGFzc3dvcmQ=
+The “dXN” is just “username:password” encoded in Base64.
+
+Now the Server just needs to decode the Username and Password and get the actual user lookup started. The Server can also inform Clients that the authentication is need via this HTTP Response Header:
+
+WWW-Authenticate: Basic realm="RealmName"
+All typical Clients and Servers can handle this “basic” stuff very well.
+
+
+
+
+
+---------------------------------------
+The username and password in your example are using HTTP Basic Authentication - they aren't part of the URL but rather included in the header information. You can access this info in ASP.NET, see this article: Basic Authentication with Asp.Net WebAPI
+
+
+public class BasicAuthenticationAttribute : System.Web.Http.Filters.ActionFilterAttribute {
+    public override void OnActionExecuting(System.Web.Http.Controllers.HttpActionContext actionContext) {
+        if (actionContext.Request.Headers.Authorization == null){
+            // No Header Auth Info
+            actionContext.Response = new System.Net.Http.HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
+        } else {
+            // Get the auth token
+            string authToken = actionContext.Request.Headers.Authorization.Parameter;
+            // Decode the token from BASE64
+            string decodedToken = Encoding.UTF8.GetString(Convert.FromBase64String(authToken));
+
+            // Extract username and password from decoded token
+            string username = decodedToken.Substring(0, decodedToken.IndexOf(":"));
+            string password = decodedToken.Substring(decodedToken.IndexOf(":") + 1);
+        }
+    }
+}
+
+
+
+
+

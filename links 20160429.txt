@@ -87,6 +87,11 @@ NXdZE854ssc0J0R_fPDYJKBFOk68L74OioVreE1DX6rci6PRyrEuiuARzWPY1ziRzwHakaJvlvZgZ3-g
 
 
 
+For Basic Authentication implementation
+http://localhost:52377/api/Values
 
 
+User-Agent: Fiddler
+Host: localhost:52377
+Authorization : Basic user:password
 
