@@ -1,0 +1,12 @@
+http://www.dotnetcurry.com/aspnet/1223/secure-aspnet-web-api-using-tokens-owin-angularjs
+
+
+http://bitoftech.net/2014/06/01/token-based-authentication-asp-net-web-api-2-owin-asp-net-identity/
+https://github.com/tjoudeh/AngularJSAuthentication
+
+No Authentication approach
+--------------------------------
+http://www.c-sharpcorner.com/UploadFile/ff2f08/token-based-authentication-using-Asp-Net-web-api-owin-and-i/
+
+
+http://saifikram.com/2014/06/token-based-authentication-using-asp-net-web-api-2-with-owin
