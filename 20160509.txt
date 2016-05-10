@@ -1,0 +1,13 @@
+http://localhost:55959/v1/Products/Product/allproducts
+
+
+Learn MVC in 16 hours :- https://goo.gl/1br5mb
+Learn AngularJS Step by Step:- https://goo.gl/WMhWbF
+Learn Design Pattern in 8 hours:- https://goo.gl/Lqdn1S
+
+User-Agent: Fiddler
+Host: localhost
+Accept: application/xml
+Authorization : Basic testuser:Pass1word
+
+this concept is called content-negotiation, we can have accept header to return specific data format.

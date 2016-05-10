@@ -87,11 +87,19 @@ NXdZE854ssc0J0R_fPDYJKBFOk68L74OioVreE1DX6rci6PRyrEuiuARzWPY1ziRzwHakaJvlvZgZ3-g
 
 
 
-For Basic Authentication implementation
-http://localhost:52377/api/Values
 
 
-User-Agent: Fiddler
-Host: localhost:52377
-Authorization : Basic user:password
+
+Additional information: The server factory could not be located for the given input: Microsoft.Owin.Host.HttpListener
+
+To build the OWIN middleware
+Web api core
+Web aPI owin
+system.web Owin
+
+Microsoft.Owin.Host.HttpListener 3.0.1' to SecurityPipelineDemo
+
+
+
+
 
