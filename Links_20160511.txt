@@ -1,0 +1,475 @@
+What is MVC
+https://www.youtube.com/watch?v=Iwwznm9XSME
+ http://youtu.be/miTM9rY3He0
+
+
+* good to have properties that call methods to transform data to proper format
+e.g. Name field like Rahul instead of RAHUL or rahul, First letter capitalized 
+
+
+
+
+
+
+Learn AngularJS Step by Step:- https://goo.gl/WMhWbF
+Learn Design Pattern in 8 hours:- https://goo.gl/Lqdn1S
+Learn C# and .NET in 60 days :- https://goo.gl/iPIW8v 
+
+
+
+
+https://www.youtube.com/watch?v=Iwwznm9XSME
+MVC 4 comes with VS 2012
+MVC 5 comes with VS 2013
+
+ASP.net Framework
+---------------------------------
+ASP.net webform is a .net framework for web development
+MVC uses ASP.net (internally) and it is a .net framework for web development
+
+MVC is an architectural pattern that divides the program into Model-View-Controller
+
+-Model supplies data
+-View is the User Interface
+-Controller is the coordinator between model and view and handle end user request
+
+
+e.g. when end user send action named AddCustomer that belong to Customer Controller and use Customer model. The Controller process the request and generates the view for the request. Action invokes view(page) for the request.
+
+Views engine could be .aspx or .cshtml
+
+HomeController -> All controller must end with the word Controller
+
+ WE can omit Model or View, if not required.
+
+Controller has many templates e.g. Empty, read/write, EF, Web API controller....
+
+For each controller there created a dedicated folder in view folder. View can have layout page (as master page). View can be created with or without using model. View must be inside the controller (view) folder or in shared folder.
+
+Razor view file has extension .cshtml and all syntax start with @ sign.
+
+
+* with each action, you can return any view by viewname. If the name of the view is same as the name of the controller, you dont need to pass the view name.
+
+MVC URL can be like http://server/controller/action/{id}
+
+
+
+Routing simplifies URL writing. We can have custom routing for resources by using routing mechanism in MVC. Also it make url user friendly and routing maps the url to actual resource (controller/action).
+[RouteConfig.cs]
+It has routes collection.
+
+Routes.MapRoute(
+name:"Default",
+url:"{controller}/{action}/{id}"
+defaults" new {controller="Home",action="Index" id=optional}
+);
+
+
+
+Always make the Default route as the last route, otherwise it is always invoked due to default nature and none other route are execute.
+
+
+
+In the same way, we have IgnoreRoute that is used to prevent user from downloading the resource files 
+routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+
+
+To set start page, you need to set the route for first page e.g. url="" to be set to some controller/action.
+
+Custom URL will help in SEO as page name, metadata/content matches.
+
+
+
+------------------------
+1) We can pass data from controller to view or controller to controller
+ViewData is used to pass data from controller to view.
+
+
+ViewData["CurrentTime"]=Datetime.Now.Tostring();
+
+In view you can use <% = ViewData["CurrentTime"]  %>
+
+@Html.DisplayNameFor(model => model.CustomerName)
+@Html.DisplayFor(model => model.CustomerName)
+
+
+[Quick watch to view value of variables and debug.]
+
+
+2) 
+https://www.youtube.com/watch?v=0-UdqWy9lVc
+
+
+
+
+(3) link
+https://www.youtube.com/watch?v=0-UdqWy9lVc
+
+
+
+4) https://www.youtube.com/watch?v=1dlxtHuRw34
+Create a form and submit to the display page.
+
+MVC view have job for collecting data and displaying data and does not contain any logic in page.
+
+
+5)
+to create strongly typed form and display form
+https://www.youtube.com/watch?v=PAXFmUUTyJ0
+
+HTML helper classes help us to create HTML tags and maximize the productivity. 
+We can have data entry and display form strongly typed that makes data binding and reduce the effort.
+
+HTML Element helpers
+
+HTML.TextBoxFor()
+HTML.TextAreaFor()
+HTML.DropDownListFor()
+HTML.CheckBoxFor()
+HTML.RadioButtonFor()
+HTML.ListBoxFor()
+HTML.HiddenFor()
+HTML.LabelFor()
+
+Other helpers
+HTML.EditorFor()
+HTML.DisplayFor()
+HTML.DisplayTextFor()
+HTML.ValidationMessageFor()
+
+HTML.BeginForm("action", "controller",FormMethod.Post/Get) - to start creating form
+
+@HTML.Textbox("CustomerId")
+
+<% HTML.TextBox("CustomerId")%>
+
+
+and we can bind the textbox to the customer object like below. This form when post give customer object already created using form
+<% HTML.TextBox("CustomerId", Model)%>
+only object name is required with the overloaded function 
+
+Helper help you to automate the control generation and help in strongly type views.
+
+
+[HttpPost] attribute is used with action to denote it is form object.
+
+
+ 5th link
+https://www.youtube.com/watch?v=PAXFmUUTyJ0
+
+
+6)step
+https://www.youtube.com/watch?v=FlIyHGQyCVU&spfreload=5
+
+Unit testing for MVC application. MVC benefit is view is clean and better, view has no complication. second advantage is unit testing made easy
+
+Unit testing was difficult with code behind pages as it tied to view andcontext and other dependencies.
+
+In MVC, the controller class is basic .net class, so unit testing is easy.
+
+VSTS unit test
+
+
+Creating customer controller object and invoking the action
+customerController obj= new CustomerController();
+var varresult=obj.DisplayCustomer();
+comparing the result by Assert.AreEqual("DisplayCustomer",VarResult.ViewName)
+
+
+
+7th Step
+------------------------
+https://www.youtube.com/watch?v=oDcZ5Qm02JE
+
+Routing concepts
+Default Routing collection -  route.MapRoute(name,URL,mapping to class)
+You can put string that becomes part of URL
+localhost/view/Customer and set the mapping accordingly
+
+8th Step
+-------------------------------
+https://www.youtube.com/watch?v=oJOiUtKqZG4
+We can define the routes in global.asax.cs file with method 
+public Static void RegisterRoute (routeCollection route)
+{
+routes.maproutes(...)
+}
+
+and on Application_Start()
+we can do registration 
+protected void Application_Start() 
+{
+AreaRegistration.Registerallareas();
+RegisterRoutes(RouteTable.Routes);
+}
+
+
+
+Set default value and validate MVC routes
+
+We can set the default value in mapping as id=0
+Regular Expression or Regex is to do pattern matching.
+Regex are expression that define pattern for validation.
+
+with overloaded ObjectConstraint option
+new {controller="Customer",action="DisplayCustomer",id=0}, new {id=@"\d{1,2}"})
+or when to apply GET constraint
+new {httpMethod= new HttpMethodConstraint("GET")});
+
+Study Regular Expression and how to use it
+
+
+9 Step
+------------------------
+https://www.youtube.com/watch?v=_323VsR-Th0
+
+Discuss about outgoing/outbound URL in MVC Routes
+
+Anchor tags are used to navigate from one page to another
+But in MVC everything is controller/Action
+
+Hyperlinks (filename) are replaced by action links or passing action to href
+e.g.
+<a href="ActionName">About Us</a></br>
+<a href="ControllerName/ActionName">About Us</a></br>
+
+or using HTML helper class
+e.g.
+<% Html.ActionLink("About Us","aboutus") %>
+                  (text, actionname)
+
+
+Next Session
+-------------------------------------
+https://www.youtube.com/watch?v=yq1N7zfZTBo
+--> viewdata,viewbag,tempdata and session
+
+1) ViewData share data from controller to view
+To store data to view data
+ViewData["txt"]="Ram"
+Now to print use -    @ViewData["txt"]
+
+2) ViewBag is a collection of ViewData. It simplifies the syntax of viewData. used to pass value from controller to view
+[Dynamic Keyword of .net] to review
+
+To store data to ViewBag
+ViewBag.CurrentDateAndTime=Datetime.Now;
+
+to print viewbag data
+@ViewBag.CurrentDateAndTime
+
+=> ViewBag and ViewData does not persist when we move from one controller to another. TempData is used for this
+
+TempData - Used to pass value from one controller to another.
+TempData["CurrentDateAndTime"]=DateTime.Now;
+
+String str= TempData["CurrentDateAndTime"].ToString();
+
+
+=> To persist data from view to controller use HTTP POST/GET/Textboxes /QueryString/Hidden Field
+
+
+
+=> To Persist data everywhere use Session. Have global scope until user session is open
+
+Session["CurrentDateAndTime"]=DateTime.Now;
+
+
+
+
+
+
+
+--------------------------------------------------
+when you want to return to different controller
+Return RedirectToAction("SampleView1");
+--------------------------------------------------
+
+
+
+
+
+
+Another Video Series
+--------------------------------------------
+Part 1 of the MVC Series
+--------------------------------------------------
+https://www.youtube.com/watch?v=-pzwRwYlXMw&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v
+
+later series
+https://www.youtube.com/watch?v=duQ1Pvr-oW0
+--------------------------------------------------
+
+=>To get the version of MVC used to build the application
+go to reference -> System.Web.MVC -> Properties -> Version
+
+=>Programmatically get it by
+Return typeof(Controller).Assembly.GetNamne.Version.ToString();
+
+--------------------------------------------------
+=> MVC controller is a normal class that inherit from Controller Class
+To deploy use Run->inetmgr for opening IIS server
+Publish and use local IIS web server in Project properties windows
+
+
+--------------------------------------------------
+
+=> In MVC, Urls are mapped to controller Action Methods. Function in a controller are generally called as Controller action method
+Whereas in WebForms URL's are mapped to Physical files
+
+MVC  -> Server/ProjectName/Controller/Action
+
+if Action/Controller, not found it gets HTTPStatus Code 404, Resource not found
+
+WebForm -> Server/ProjectName/Page.aspx
+--------------------------------------------------
+
+The URL is mapped to proper controller action method by routing. Routing is defined in the App_Start -> route.Config
+
+Also the Application_Start method under the Global.asax file, register all the components including RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+Code at
+--------
+http://csharp-video-tutorials.blogspot.in/2013/04/controllers-in-mvc-application-part-4.html
+
+--------------------------------------------------
+In Mvc, you can pass the query string using URL?name=Ram
+and inside code
+use  Request.QueryString["name"];
+
+Also you can pass the value as parameter and use it directly.
+
+localhost/appname/controller/action/1/name=pragim
+
+and use in code like
+Controller function (string a, int b)
+
+=>ASP.net MVC will automatically pass any query string or form post parameters name "name" to Index action method when it is invoked.
+--------------------------------------------------
+Trace enable can be done in MVC like webform.
+In system.web under config file
+<trace enabled="true" pageOutput="false"/>
+it will return to a file trace.axd
+
+--------------------------------------------------
+Part -4
+https://www.youtube.com/watch?v=duQ1Pvr-oW0&index=4&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v
+
+Part -5
+https://www.youtube.com/watch?v=N6srbKfNcV4&index=5&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v
+-------------------------------------------------
+Demo for printing List of country using list and view
+
+ViewModel to pass data from controller to view.
+ActionResult is return type of controller
+ViewResult can be used for this purpose.
+
+ViewBag uses dynamic properties to store values/list/objects.
+
+-------------------------------------------------
+Part -6
+https://www.youtube.com/watch?v=KrdMO2akohE&index=6&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v
+ViewData and ViewBag are use to pass data from controller to view. ViewData is a dictionary of objects that are stored and retrieved using string as keys.
+
+ViewBag and ViewData does not provide compile time error checking. if you misspell, it will be known only at runtime. ViewBag properties are stored as name/value pairs in the ViewData dictionary.
+
+To pass data from controller to view, its always a good practice to use strongly typed view models over ViewBag and ViewData. Strontly typed view model provide compile time error checking.
+
+
+-------------------------------------------------
+
+Part -7
+https://www.youtube.com/watch?v=KYOMgtZ4k3w&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v&index=7
+
+Creating Employee model and generating the class object/data hardcoded into
+controller method (without db access).
+
+The controller responds to URL request, gets data from a model and hands it over to the view. The view then renders the data. Model can be entities or business objects. (? Why)
+
+=>We can create strongly typed view and pass the model class to view
+
+
+-------------------------------------------------
+Part - 8
+https://www.youtube.com/watch?v=Lrr66APUwBk&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v&index=8
+Data Access using Entity Framework
+
+
+To do so install EF from NuGet Package
+
+Add a class file EmployeeContext:DbContext
+
+DbContext class is defined in System.Data.Entity
+
+public class EmployeeContext:DbContext
+{
+	public DbSet<Employee> Employees {get;set;}
+}
+
+
+Then define Connection string for EF in web config file. The name of the connectionString must match with the name of the context class.
+
+[Table("tblEmployee")]
+ to map the database table to the business class that EF use.
+
+To get data from the EF
+EmployeeContext empcontext = new EmployeeContext();
+Employee empl=empcontext.Employees.Single(emp=>emp.EmployeeId == id);
+
+In global.asax in Application_Start
+do write
+Database.SetInitializer<MVDDemo.Models.EmployeeContext>(null);
+
+This statement tell it does not require any database initialization strategy.
+
+
+-------------------------------------------------
+Part- 9
+https://www.youtube.com/watch?v=It_X8Br2rmY&index=9&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v&spfreload=5
+
+Generating Hyperlinks and link pages to it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+whatever user enter

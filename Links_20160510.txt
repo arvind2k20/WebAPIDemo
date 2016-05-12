@@ -1,0 +1,22 @@
+
+cross domain web api reference
+http://www.asp.net/web-api/overview/security/enabling-cross-origin-requests-in-web-api
+http://www.c-sharpcorner.com/UploadFile/dacca2/web-api-with-ajax-cross-domain-ajax-call-with-get-request/
+
+
+
+
+http://www.aspsnippets.com/Articles/Populate-ASPNet-DataList-by-binding-DataSet-Client-Side-using-jQuery-AJAX.aspx
+
+
+            //error: function (xhr, ajaxOptions, thrownError) {
+            //    alert(xhr.status);
+            //}
+
+
+https://www.goibibo.com/hotels/detail/Rishikesh/Tapovan%20Vatika%20Resort/1546081981995124445/5041574067897989605/v3/hotels-1546081981995124445-20160514-20160515-1-2_0/f%7B%22hn%22:%22Tapovan%20Vatika%20Resort%22%7D/
+
+
+http://stackoverflow.com/questions/2342371/jquery-loop-on-json-data-using-each
+
+
