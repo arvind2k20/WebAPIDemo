@@ -431,6 +431,625 @@ https://www.youtube.com/watch?v=It_X8Br2rmY&index=9&list=PL6n9fhu94yhVm6S8I2xd6n
 Generating Hyperlinks and link pages to it.
 
 
+Part-10
+https://www.youtube.com/watch?v=oN1f2Vpc-wU&index=10&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v
+
+Working with multiple tables/Views
+-------------------------------
+- To get data from multiple tables that has dependencies, map the properties of other table as list.
+- To use Entity Framework to fetch data from database.
+-HTML.ActionLink is used to generate hyperlinks. Use to pass parameter to another pages.
+- In view to add reference -  @using MVCDemo.Models 
+  @Model IEnumerable<Department> to accept list of departments as model in view
+
+
+
+
+
+
+Part - 11
+-----------
+https://www.youtube.com/watch?v=lI20jBpb2wU&index=11&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v
+
+Business objects as Model in MVC application. Business objects contain both the state(data) and behavior, that is logic specific to the business.
+
+In MVC there are several conventions, e.g. controller must have controller in thier name and should implement IController Interface either directly or indeirectly. Views should be placed in a specific folder that MVC can find them.
+
+But with models there is no strict rules. In Fact "Models" folder is optional and they can live anywhere. They even present in a separate folder.
+
+Created the Business layer and done db operation using ADO.net and SQL stored procedure.
+
+We can make strongly typed view and bind model to view.
+
+Scaffold template as list/Create, automatically write the code for the view.
+
+
+
+Part - 12
+------------------------
+https://www.youtube.com/watch?v=qpAe45xTEfQ&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v&index=12
+Creating a view to insert data using MVC
+
+- To decorate the controller action method with http get attribute, that means this action/Resource respond to the GET request only.
+
+- Used HTML helper class HTML.DropDownList to bind the gender data. It binds the data to the selectListItem.You can put optional text as well as "Select Gender".
+
+This form has become the GET Request of the form. But when we post the webform, there is an error as resource not found as no POST attribute method present.
+
+
+
+Part - 13
+------------------------
+https://www.youtube.com/watch?v=IAQ4u_JRk0E&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v&index=13
+
+
+FormCollection in MVC. To Post data of Form to be saved into database. Used Stored procedure
+
+- Created business logic method "AddEmployee"
+- Now create another Create action inside Employee controller with HttpPost attribute.
+
+- With formCollection you can print all the key and values from the form posted. AllKey properties return all key, key has name of key and formCollection[key] to print values.
+
+- Bind the business object employee with all the values of formcollection individually.
+
+- RedirectToAction return to another controller/action
+
+[HttpPost]
+public ActionResult Create (FormCollection formcollection)
+{
+
+}
+
+
+But form bigger form writing all the binding code is tedious task, model binder in MVC can do this task.
+
+
+Part-14
+----------------------------------------------------------
+https://www.youtube.com/watch?v=OX69gRT7azs&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v&index=14
+
+
+-We can omit the FormCollection object.
+-We can use parameters as well instead of FormCollection. Function take all the required data as function parameters. How data automatically mapped to the parameters as function parameters. Model Binder do this job. name properties of the html controls bind the data to the action method. Order of parameter in not relevant, name must be matched.
+- That is not the permanent solution and problematic for binding object/dozens of properties.
+
+Part-15
+----------------------------------------------------------
+
+- We can pass the employee object to the create method as parameter.
+- We can check if any model validation error, before saving data
+
+if (ModelState.IsValid)
+{
+---
+}
+else
+return view();
+
+We can get rid of passing the class object and use UpdateModel(employee) to bind the form data to the employee model.
+
+->But we can not have 2 function with the same name/signature, as in the case of create function. To fix this
+We can use ActionName("Create"). This will respond to the create action of the get  action.
+
+- Also you can add the ActionName("create") in both the action and have different name of the action methiod -> Create_Get, Create_Post and then adding the actionName above the methods.
+
+UpdateModel() function inspects all the httpRequest input such as posted Form data, QueryString, Cookies and Server variables and populate the employee object.
+
+-> Difference between UpdateModel and tryUpdateModel
+
+- With UpdateModel you may get intermittent error stating - Adding the specified count to the semaphore would cause it to exceed its maximum count. To fix either 
+1) REstart IIS 
+or 
+
+2) Disable connection pooling in the connection string of the web.config file.
+
+Part - 16
+------------------------------------------------------------
+https://www.youtube.com/watch?v=2WH9FiQLzTY&index=16&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v
+
+
+Difference between updateModel and tryUpdateModel
+
+
+==>Ctrl + K to format the code. ctrl+G to go to particular line.
+- DateTime to be set as Nullable by adding DateTime?
+- sp_helpText stored procedure name to get details of the stored procedure
+- DateTime must be checked for DBNull before assigning it to the object properties.
+- To make the properties required, add Required attribute to class properties
+  Add a reference to the Entity framework and import system.ComponentModel.DataAnnotations
+[Required]  -- attribute
+
+- With this required, UpdateModel can not update the emnployee.
+
+- In this case you can use tryUpdateModel, to see the behaviour. This get you the validation messages. Thats the difference between the UpdateModel or tryUpdateModel
+
+==> UodateModel() throws an exception if validation fails whereas TryUpdateModel will nevger throws an exception. The similarity is, both the functions are used to update the Modelwith the Form values and perform the vfalidation. No mandatory to use these function and use other mechanism to bind the data.
+
+=>Why do you need to explicitly invoke model binding?
+If we want to limit on what can be bound, explicitly invoking model binding can be vary useful.
+
+
+
+Part - 17
+-------------------------------------------
+https://www.youtube.com/watch?v=ItSA19x4RU0&index=17&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v
+
+Editing a model in mvc (GET action)
+
+-To format HTML, use ctrl +KD
+
+
+
+
+Part 18 Updating data in mvc
+-------------------------------------------
+https://www.youtube.com/watch?v=_f4TCBcOdi0&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v&index=18
+
+Editing a model in mvc (POST action)
+cmd.ExecuteNonQuery() - ADO.net command to execute 
+
+ModelState has errors properties that we can use (for validation).
+In Immediate window-
+?ModelState["DateOfBirth"].errors[0]
+
+
+Part 19 Unintended updates in mvc
+-----------------------------------------------------
+
+https://www.youtube.com/watch?v=kfBvS-VOZFw&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v&index=19
+
+
+It means making some of the field not editable. In view instead of EditorFor use
+DisplayFor, but updating required name (as it is required)
+Hiddenfor is used for ID field of the record.
+Add another HiddenFor for field that you dont want to make editable.
+
+But when you have implementation like this, it is possible to hack into the app and update the name field. This can be done by using Fiddler.
+
+
+
+
+
+
+Part 20 Preventing unintended updates in mvc
+--------------------------------------------------
+https://www.youtube.com/watch?v=T__S4GmQsYs&index=20&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v
+
+
+
+To prevent this kind of issue, Instead if employee object, pass the emp id only.
+
+With model binding method UpdateModel, use overload that take included properties
+UpdateModel(employee, new string[] {"ID","Gender","City","DateOfBirth"});
+
+White list or black List for properties that can be binded, include and exclude list of parameters for UpdateModel.
+
+
+Part 21 Including and excluding properties from model binding using bind attribute
+--------------------------------------------------
+
+https://www.youtube.com/watch?v=OSMVySNMu8A&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v&index=21
+
+
+
+Include and exclude using Bind Attribute with action method
+
+public ActionResult Edit_Post([Bind(Include="ID, Gender, City, DateOfBirth")], Employee employee)
+
+
+In this case, we dont need UpdateModel method to bind the data, as the object will be binded to the action method.
+
+Also required to remove the attribute [Required] from the properties that need to be excluded.
+
+
+How Properties binding works in MVC?
+
+
+Part 22 Including and excluding properties from model binding using interfaces
+-------------------------------------------------------------------------------
+https://www.youtube.com/watch?v=6qq31WYQxrk&index=22&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v
+
+It is using create an IEmployee
+ interface that exclude the desired properties and the class inherit from the interface
+
+
+Also the UpdateModel takes IEmployee.
+UpdateModel<IEmployee>(employee);
+
+
+
+Part 23 Why deleting database records using get request is bad
+-----------------------------------------------------------------
+https://www.youtube.com/watch?v=eau7pfJYpT4&index=23&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v
+
+Delete issue GET request to the URL, and deletes the record
+
+Deleting database record using GET request opens a security hole and it is not recommended by Microsoft. Just imagine what can happen if there is an image tag in the malicious email as shown below. The moment we open the email, the image tries to load and issues a GET request, which would delete the data.
+<img src="http://localhost/MVCDemo/Employee/Delete/2" />
+
+Also when search engines index your page, they issue a GET Request which would delete the data.
+
+In general, GET request should be free of any side-effects, meaning it should not change the state. Deletes should always be performed using the POST request.
+
+
+
+Part 24 Deleting database records using post request in mvc
+------------------------------------------------------------------
+
+https://www.youtube.com/watch?v=G4i3-87cavk&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v&index=24
+
+
+Delete link must be replaced by Delete button that fires post request for delete. this button must be inside html begin form helper
+
+
+
+Part 25 Insert update delete in mvc using entity framework
+-------------------------------------------------------------
+https://www.youtube.com/watch?v=8f4P8U1a2TI&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v&index=25
+
+A) Creating edmx for application.
+1) First add ADO.net Entity Data Model
+2) Generate model from database, db first approach
+3) Add new connection and specifiy server (local) and database name
+4) Name the connection string and details. 
+5) Select the tables/views/procedures to include into 
+6) Namespeace for Model you can put to use in application
+
+B) Add Controller and select template using scaffolding options
+C) It auto-generate the controller and view codes for the application with option to list, create, edit, details, delete features.
+
+
+
+
+Part 26 Customizing the auto-generated index view
+-------------------------------------------------------------
+https://www.youtube.com/watch?v=Y45YpWt4twM&list=PL6n9fhu94yhVm6S8I2xd6nYz2ZORd7X2v&index=26
+
+
+-You can format the style and other formatting
+- You can rename the properties name by using the MetaDataType implementation in partial class and property name can be prefixed with attribute [Display (Name = "Department Name"]
+
+Library reference : System.ComponentModel.DataAnnotations
+
+
+Part 27 Customizing the autogenerated create view
+------------------------------------------------------------
+https://www.youtube.com/watch?v=vIxx_B7a8VU
+
+To make data annotation required, here we used the MetaDataType attribute in partial class and having another class that works as prototype for this class
+
+Display attribute required to annotate properties with another words.
+
+
+Part 28 Customizing the autogenerated edit view
+-------------------------------------------------------------
+https://www.youtube.com/watch?v=6D97XE-v5GI
+
+
+Validation error can also be added dynamically, if string.isnullorEmpty(employee.name)
+
+Then
+ModelState.AddModelError("Name","The name field is required");
+ 
+
+
+Part 29 Using data transfer object as the model in mvc
+-----------------------------------------------------------
+https://www.youtube.com/watch?v=v1B3R-kb9CU
+
+display total number of employee per department. This is where data transfer object comes to play. Create separate class for displaying the total employee and create controller, fetch the data, and pass the model to the view.
+
+
+
+Part 30 View engines in asp net mvc
+---------------------------------------------------------------
+https://www.youtube.com/watch?v=V6Ee03U3d7Y
+
+Razor View and ASPX view
+By convention, it uses the controller name view. To use the other view, you need to pass the view name alongwith  return view(viewname);
+1) Difference between Razor and aspx view
+Syntax difference is
+ there, otherwise there is no major difference between botht he view. In aspx view engine, the server side script is wrapped between <% %>, whereas in RAZOR we use @. People prefer Razor view as it is easy to switch between HTML and code. Depending upon programming language you chosen, it has extension .CSHTML, .VBHTML, whereas aspx has extension of . aspx
+
+
+You can have both Razor and ASPX view engine on the same application. During adding view you can select view engine.You can also use any 3rd party view engine with ASP.net MVC application, keeping extensibility in mind
+
+
+
+Part 31 Using custom view engines with asp net mvc
+------------------------------------------------------------
+https://www.youtube.com/watch?v=WCIgQ6epTqs
+
+There are several view engine apart from Razor or ASPX that can be installed from nuget package manager.e.g.
+
+1) Spark  (spark.Web.MVC4)
+2) NHaml
+3) SharpDOM
+4) Brail
+
+
+
+Part 32 How does a controller find a view in mvc
+---------------------------------------------------------
+https://www.youtube.com/watch?v=X4IL0BXUMy4
+
+MVC convention help to find the location and name of the view file.
+
+By convention MVC looks for a view with the same name as that of the controller action method name in the following location
+1) Views/Folder Name Matching controller Name
+2) Views/Shared
+
+View extension can be any of the following
+.cshtml
+.vbhtml
+.aspx
+.ascx
+
+If you have all of the folowing files in the "Views/Employee" folder, then MVC picks up the aspx
+
+
+Shared folder is used to store views shared between controller. Master and Layout pagesa are stored in "Shared" folder.
+
+Return view is used to specify the specific view. Use the full path of the view to navigate to any view.
+
+
+
+
+Part 33 Html helpers in mvc
+-----------------------------------------------------
+https://www.youtube.com/watch?v=MFLJkFs5UW4
+
+HTML helper is a method that is used to render html content in a view. HTML helper are implemented as extension method.
+To produce the HTML for a textbox with id="firstname"
+ and name="firstname"
+<input type="text" name="firstname" id="firstname"/>
+
+Or we can use the "TextBox" html helper
+
+@Html.TextBox("firstname")
+There are several overloaded versions. To set the value along with the name
+@Html.TextBox("firstname","John")
+
+John is value passed to the textbox.
+
+To set the HTML attributes, use the following overloaded version. Notice that, we are passing HTML attributes (style and title) as an anonymous type.
+
+@Html.TextBox("firstname","John", 
+	new
+	{
+	style="background-color:Red; color:White; font-weight:bold",
+	title="Please Enter your Name"
+	})
+	
+	here title act as tooltip for textbox.
+
+You can also set the CSS class for the textbox
+@Html.Textbox("firstname", "John", new {@class="redtextbox",@readonly="true"})
+
+
+For Label you can use 
+@Html.Label("firstname","First Name")
+
+To generate a textbox to enter password, so that the input is masked
+@Html.Password("Password")
+
+To generate a multi-line textbox with 5 rows and 20 columns
+@Html.TextArea("comments","",5,20, null)
+
+To get a hidden textbox
+@Html.hidden("id")
+
+Hidden textbox is used to store id values. Id values are not displayed on the page to the end user, but we need them to update data when the form is posted to the server.
+
+
+-> Custom HTML helper can be created 
+-> It is not mandatory to use HTML helper, but using HTML helper can greatly reduce the amount of HTML that we can write in the view. Views should be as simple as possible. All the complicated logic ot generate a control can be encapsulated into the helper, to keep the view simple.
+
+
+
+
+Part 34 Generating a dropdownlist control in mvc using HTML helpers
+---------------------------------------------------------------------
+https://www.youtube.com/watch?v=79aYSOcmpV8
+
+A dropdownlist in MVC is a collection of SelectListItem objects. Depending upon the project requirement you may either hard code the values in code or retrieve them from the database.
+
+Generating a dropdownlist using hard code values
+
+DropDownList(string name, IEnumerable<SelectListItem> selectList, string optionLabel)
+
+@Html.DropDownList("Departments", new List<SelectListItem>
+{
+new SelectListItem{Text="IT", Value="1", Selected=true},
+new SelectListItem{Text="HR", Value="2"},
+new SelectListItem{Text="Payroll", Value="3"}
+}, "Select Department")
+
+
+
+To generate the dropdownlist from database
+1) Create EF context class
+2) In the controller create db context object, select the department using Selectlist object and assign to viewBag to pass the value to view
+
+In controller
+SampleDbContext db = new SampleDbContext();
+ViewBag.Departments= new SelectList(db.Departments,"Id","Name");
+Return View();
+
+
+In the View
+@HTML.DropDownList("Department", "Select Department")
+
+
+
+Part 35 How to set an item selected when an asp net mvc dropdownlist is loaded
+---------------------------------------------------------------------
+https://www.youtube.com/watch?v=ZUjOgrb4oHQ
+
+SelectList has the overloaded constructor to pass the selected value.
+
+This is something hardcoded and need to change when some other department has to be set as default.
+
+Instead you can add column isSelected in database table and implement that one. Loop through the records and select the selected value from the records.
+
+
+
+
+Part 36 Difference between Html TextBox and Html TextBoxFor
+-------------------------------------------------------------------	
+https://www.youtube.com/watch?v=peKEMGxz3hs
+
+==>View can be strongly typed or normal view
+For Strongly typed view, we can use Html.TextBoxFor variant of the HTML helper controls.
+
+@Html.TextBoxFor(m=>m.CompanyName)
+
+@Html.DropDownListFor(m=>m.Departments, new SelectList(Models.Departments, "Id", "Name", "Select Department")
+
+
+For Normal view, we can use Html.TextBox variant
+
+
+Html.TextBox and Html.DropDownList are not strongly typed and hence they does not require a strongly typed view. This means that we can hardcode whatever name we want. On the other hand, Html.TextBoxFor and Html.DropDownListFor are strongly typed and requires a strongly typed view, and the name is inferred from the lambdaexpression.
+
+Strongly typed HTML helpers also provide compile time checking. Since, in real time, we mostly use strongly typed views, prefer to use Html.TextBoxFor and Html.DropDownListFor over their counterparts.
+
+Both variants produce the same HTML-end result is same.
+
+Strongly typed HTML helpers are added in MVC2.
+
+
+
+Part 37 Generating a radio button list control in mvc using HTML helpers
+-------------------------------------------------------------------------
+https://www.youtube.com/watch?v=04RY04uKq2s
+
+
+db.Departments.toList() - Return list of department where db is context class.
+
+In view
+@using (Html.BeginForm())
+{
+
+foreach(var department in Model.Department)
+{
+	@Html.RadioButtonFor(m=>m.SelectedDepatment, Department.Id) @department.Name
+}
+
+<input type="submit" value="Submit">
+}
+
+Implement HttpGet or HttpPost for Index action method of the Home Controller.
+
+
+You can change the sequence of radio button by inserting <br/> inside loop.
+You can also check the value from  the isSelected properties of the department table. (with radio button overload
+
+@Html.RadioButtonFor(m=>m.SelectedDepatment, Department.Id, (department.IsSelected.HasValue && Department.IsSelected.Value)? new {@checked="checked"}:null) @Department Name
+
+
+
+Part 38 CheckBoxList in asp net mvc
+----------------------------------------------------------------------
+https://www.youtube.com/watch?v=4KeoOPWshmw
+
+To see - Diff between Editor template and Display Template
+Html.EditorForModel is used with EditorTemplate that is containted inside the view/Controller Name Folder/EditorTemplates
+
+You can select multiple city and display using this control.
+
+Part 39 ListBox in asp net mvc
+--------------------------------------------------------------
+https://www.youtube.com/watch?v=pZSP8tTAK1w
+
+
+Listbox allow selection of multiple options
+ViewModel is specific to the view, basically view model is used to shuttle data from view to controller and from a controller to a vieic IEnumerable<SelectListItem> cities{get;set;}
+
+Html.ListBoxFor control help to bind the list to Ienumerable cities.
+To disable the scrollbar and set the number of items displayed without scrollbar, setting size attribute help this.
+
+
+
+Part 40 Using displayname, displayformat, scaffoldcolumn attributes in asp net mvc application
+--------------------------------------------------------------
+
+https://www.youtube.com/watch?v=WuRKCWAL4uQ
+[DiaplayAttribute(Name="FullName")]
+[Diaplay(Name="FullName")]
+
+These are used to set the display attributes to the properties of the class
+
+[DisplayFormatAttribute(DataFormatString="{0:d}")]
+[DisplayFormat(DataFormatString="{0:dd/MM/yyyy HH:mm:ss tt}")]
+tt will say AM/PM
+
+Capital HH means 24 hour notation
+hh means 12 Hour notation
+
+Similarly for missing value
+[DisplayFormat(NullDisplayText=("Gender not specified")]
+
+
+If you dont want to display a information, you can use scaffold attribute. This only works when you use @Html.DisplayForModel helper
+
+
+[ScaffoldColumn(false)]
+public int? Salary{get;set;}
+
+
+@Html.DisplayForModel will go through each of the properties and render it.
+
+
+Part 41 Using datatype and displaycolumn attributes in asp net mvc application
+-------------------------------------------------------------------
+https://www.youtube.com/watch?v=XirIE7N3-fk
+
+Like email address to be displayed as hyperlink use DataType attribute
+[DataType(DataType.EmailAddress)]
+          DataType.Currency
+          DataType. Url
+          DataType.Date
+          DataType.Time
+
+- Globalization and localization setting using config    
+- Display column attribute is useful, when a class has a property of complex type an dyou want to pick one property of this compelx object for display purpose.
+
+
+[DisplayColumn(FullName)] in partial class
+
+
+Part 42 Opening a page in new browser window in asp net mvc application
+------------------------------------------------------------------
+https://www.youtube.com/watch?v=2p7neX8nEXQ
+
+@Html.displayForModel display all data of the model
+
+To make open the URL properties in new windows, by creating DisplayTemplate-> Shared->view. create a view with url name, 
+
+Inside the url file, you can specify the target attribute to _blank. the url option of DataType search for displayTemplate folder and view of same file.
+
+It open all the links in new windows
+
+When you have different template name as view , then you need to pass the value of 
+view to [UIHint("NewWindows")]
+
+
+
+Part 43 Hiddeninput and readonly attributes in mvc
+-----------------------------------------------------
+
+https://www.youtube.com/watch?v=eVlKYGSVbRo
+
+Readonly is to make a property of class read only
+HiddenInput is for making a property hidden.
+You make make read only by removing the set accessor.
+
+
+
+Part 44 Display and edit templated helpers in asp net mvc
+-------------------------------------------------------------
+https://www.youtube.com/watch?v=MSUbLMD_fmw
 
 
 
@@ -442,34 +1061,3 @@ Generating Hyperlinks and link pages to it.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-whatever user enter
