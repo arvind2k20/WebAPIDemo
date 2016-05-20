@@ -1052,6 +1052,214 @@ Part 44 Display and edit templated helpers in asp net mvc
 https://www.youtube.com/watch?v=MSUbLMD_fmw
 
 
+TEmplated helpers are introudced in MVC2. These built in templated helpers can be broadly classificed into 2 categories
+1) display templates
+2) Editor Templates
+
+There are 3 display templated helpers
+@Html.display("EmployeeData") - Used with a view that is not strongly typed. For example, if you have stored data in ViewData, then we can use this templated helper using the key that was used to store data in ViewData.
+
+@Html.DisplayFor(model=>Model) - Used with strongly typed viuews. If your model has properties that return complex objects, then this templated helper is very useful.
+
+@Html.DisplayForModel() - Used with strongly typed views. Walks through each property, in the model to display the object.
+
+Along the same line, there are 3 Edit templated helpers
+@Html.Editor("EmployeeData")
+@Html.EditorFor(model=>model)
+@html.EditorforModel()
+
+
+
+MetaDataType attribute is applied to class to provide additional attributes to class properties.
+
+
+
+
+
+When  not strongly typed and we pass the data to view using ViewData, still you can generate the view with data object
+In controller
+
+EmployeeContext context = new EmployeeContext();
+Employee empl= context.Employees.Single(x=>x.id==id);
+ViewData["EmployeeData"]=empl;
+
+In view
+@Html.Display("EmployeeData")
+
+
+
+To associate metadata with model class properties, we use attributes. We can also use various data annotations attributes. These templated helpers use metadata associated wth the model to render the interface.
+
+The built-in display and edit templated helpers can be very easily customized.
+
+
+Part 45 Customize display and edit templates in asp net mvc
+-----------------------------------------------------------------
+https://www.youtube.com/watch?v=Y0JhoULu-zI
+
+
+The built in DateTime editor template used by MVC simply display a textbox for editing dates, but in practical, date calender control used. So we need to customize the view using Jquery Calender.
+
+There are following convention used by MVC to find the customized templates
+
+1) The customized display templates must be in a sub folder that is named DisplayTemplates. Editor templates must be in a sub-folder that is named EditorTemplates.
+
+2) These sub-folders can live in "Shared" folder or a specific views folder. If these folders are present in the Shared folder, then the templates are available for all the views. If they are in a specific view folder, then, they are available only for that set of views.
+
+3) The name of the template must match the name of the type. For example as we are customizing DateTime template, the name of the template in this case has to be DateTime.ascx
+
+
+->This demo show Jquery calender controls.
+
+
+Part 46 Accessing model metadata from custom templated helpers
+---------------------------------------------------------------
+https://www.youtube.com/watch?v=ih_o2aolf4Q
+
+To make format of the Date Editor template generic instead of hard coded. Fix the date format in class property by [DisplayFormat(DateFormatString="{0:dd/mm/yyyy}", ApplyFormatInEditMode=true)]
+
+In view
+
+@Html.Textbox("",Model.HasValue ? @ViewData.TemplateInfo.FormattedModelValue : "",  new {@class= "date"})
+
+
+
+
+To access model metadata in templates, use @ViewDAta.modelMetadata.
+
+For example to access the DisplayFormatString, use
+
+@ViewData.ModelMetadata.DisplayFormatString
+
+If you want to know the name of the containing class (i.e. the name class that contain the HireDate property) then use
+
+@ViewDAta.ModelMetaData.ContainerType.ToString()
+
+Using the ModelMetaData object, you can access all sorts of metadata.
+
+@ViewData.ModelMetaData.AdditionalValues and lots more properties....
+
+
+
+
+
+Part 47 Displaying images in asp net mvc
+----------------------------------------------
+https://www.youtube.com/watch?v=rct6LIyErUE
+
+We will use photo and alternate text, if photo missing. (path based)
+
+
+<img src="@Url.Content(@Model.photo)" alt="@Model.AlternateText"/>
+
+URL helper take the relative path of the resource and resolve that path.
+
+Views need to be as simple as possible. Any complicated code must be moved to Helpers. We can define custom HTML helper
+
+=> How to build custom HTML helper?
+
+Part 48 Custom html helpers in mvc
+----------------------------------------------------------------
+https://www.youtube.com/watch?v=2mACi5D739g
+- This is required to reduce complexity at view level and put all the codes into html helper for view
+-extension method of Html helper class
+==>-Extension method has to be static and reside in static class
+- This example helps to create a custom helper for image display
+
+
+Part 49 Html encoding in asp net mvc
+-----------------------------------------------------
+https://www.youtube.com/watch?v=IiAfCLWpgII
+
+
+Html encoding is the process of replacing ASCII characters with their 'HTML Entity' equivalents. For example
+
+ASCII Character	 -	HTML Encoded
+<			&lt;
+>			&gt;
+&			&amp
+SingleQuote		&#039;
+DoubleQuote		&quot
+
+Why should you html encode?
+To avoid cross site scripting attack, all output is automatically html encoded in MVC.
+
+=> To reviw Cross Site Scripting attack
+
+To avoid HTML encoding where we dont want automatic HTML encoding (that deface the tags)
+
+Technique	Razor	ASPX
+IHTML String	Yes	Yes
+HTML
+.Raw()	Yes	Yes
+<% %>		No	Yes
+
+
+<%: %> this is used to HTML encode when you generate view from scaffolding.
+
+The string of type IHTMLString are excluded from automatic html encoding.
+Use return type as IHTMLString and retun the text wrapped inside MVCHTMLString(string)
+
+
+
+
+Part 50 Detect errors in views at compile time
+---------------------------------------------------------
+https://www.youtube.com/watch?v=rAuxCzyz2l4
+
+
+Compile time error checking in MVC view is disabled by default.
+
+If  you want to enable compile time error checking for views in MVC
+
+1) Open the project file under MVC
+2) Serach for MVCBuildView tag under project tag set to true to allow view compilation.
+<MvcBuildViews>true</MvcBuildViews>
+
+3) Save the changes
+
+Please note : Pre-compiling views is different from compile time error checking.
+
+
+Part 51 Advantages of using strongly typed views
+-----------------------------------------------------------
+https://www.youtube.com/watch?v=xRinkoUpEEM
+
+
+There are several way available to pass data from a controller to a view in an mvc application
+1) ViewData or ViewBag
+2) Dynamictype
+3) Strongly typed view
+
+Advantages of using strongly typed views
+1) Intellisense
+2) compile time error checking
+With ViewBag and Dynamictype, we dont have these advantages.
+
+
+
+
+
+Part 52 Partial views in mvc
+-------------------------------------------------------------
+https://www.youtube.com/watch?v=SABg7RyjX-4
+
+If you are an asp.net webforms developer, then you will realize that partial views in MVC are similar to user controls in asp.net webforms. Partial Views are used to encapsulate reusable view logic and are a great means to simplify the compelxity of views. These partial views can then be used on multiple views, where we need sililar view logic.
+
+File extension for partial view depends on ViewEngine and programming language.
+
+with aspx view 
+c# - .ascx
+VB - .ascx
+
+with razor .cshtml or .vbhtml
+
+Partial view can reside in shared folder or in a specific view folder.
+
+@Html.Partial("_Employee", Item)
+
+and RenderPartial is used to display partial views.
+
 
 
 
