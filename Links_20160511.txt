@@ -1261,6 +1261,1086 @@ Partial view can reside in shared folder or in a specific view folder.
 and RenderPartial is used to display partial views.
 
 
+Part 53 Difference between html.partial and html.renderpartial
+https://www.youtube.com/watch?v=0fYzD-SUW0I
+
+Both of these helper methods are used for rendering partial views. The following are the differences .
+
+1) The return type of "RenderPartial" is void whereas "Partial" returns "MVCHtmlString"
+2)Syntax for invoking Partial() and RenderPartial() methods in Razor view
+@Html.Partial("PartialViewName")	{Html.RenderPartial("_Employee", item);}
+
+3) Syntax for invoking Partial() and RenderPartial() methods in webforms views
+<%: Html.Partial("PartialViewName")%>   <% Html.RenderPartial ("PartialViewName");)%>
+
+When would you use Partial() over RenderPartial() and vice versa?
+
+Then main difference is that "RenderPartial()"
+ returns void and the output will be written directly to the output stream, whereas  the "Partial" method returns MvcHtmlString, which can be assigned to a variable and manipulate it if required. So, when there is a need to assign the output to a variable for manupulating it, then use Partial(), else use RenderPartial().
+
+Which one is beter for performance
+From the performance perspective, rendering direclty to the output stream is better. RenderPartial() does exactly the same thing and is better for performance over Partial().
+
+
+Part 54 T4 templates in asp net mvc
+---------------------------------------------------
+https://www.youtube.com/watch?v=YIr18d5wBXM
+
+T4 stand for text template transformation toolkit used by VS to generate code when you add a view or controller. You can find in VS folder this files with name 
+
+C:/ProgramFiles/VS10/common7/IDE/ItemTemplate/CSharp/Web/MVC4/codeTemplate
+
+
+You can make changes in the .tt files
+
+If we want to customize T4 Templates, only for a specific project, then copy "CodeTemplates" folder and paste it in the root directory of the MVC project. Right click on the template files (with .tt extension) and select properties and delete "TextTemplatingFileGenerator"
+
+By deleting this from customTool property, we are telling VS not to run them during the build. They will be manually called when we add a view or a controller using "Add View" and "Add Controller" dialog box.
+
+
+You can copy inside the project main folder and make changes locally to reflect to the one project only.
+
+
+Part 55 What is cross site scripting attack
+
+----------------------------------------------------
+https://www.youtube.com/watch?v=skHBmnPqvUo
+
+Cross site scripting attack also called as XSS attack, is a security vulnerability found in Web application. XSS allows hackers to inject client-side script into web pages, and later, if the web page is viewed by others, the stored script gets exdecuted. The consequences of XSS may range from a pretty nuisance like displaying an alert() box to a significant security risk, like stealing session cookies.
+
+.net mechanism disallows the user to prevent submitting any script or malicious code. If we want to block this check 
+[ValidateInput(false)]
+
+
+By default, all html code is encoded to prevent cross site scripting.
+
+@Html.Raw(item.comments)
+
+to print HTML.
+
+By default asp.net encodes all html. This is one of the security measure in place, to prevent XSS attack. to disable html encoding
+
+@Html.DisplayFor(modelUtem=> item.Comments)   ->  @Html.Raw(item.Comments)
+
+Two important security measures in place to prevent XSS
+1) All user input is validated - But we have disabled this using ValidateInput(false)
+2) All HTML output is encoded - disabled using Html.Raw
+
+Now the application is susceptible to XSS attack
+
+
+
+
+Part 56 How to prevent cross site scripting attack
+-----------------------------------------------------------
+https://www.youtube.com/watch?v=hU0j4HM1cmM
+
+
+We can prevent XSS attack while allowing only the HTML that we want to accept. For example, we only want to accept <b> and <u> tags.
+
+
+1) Disable input validation, so that user can submit html
+
+[HttpPost]
+[ValidateInput(false)]
+public ActionResult Create(Comment comment)
+
+2) Dynamically encode all the input that is coming from the user
+
+StringBuilder sbComments = new StringBuilder();
+sbComments.Append(HttpUtility.HtmlEncode(comment.Comments));
+
+3) Finally selectively replace, the encoded html with the HTML elements that we want to allow.
+
+sbComments.Replace("&lt;b&gt;", "<b>");
+sbComments.Replace("&lt;/b&gt;", "</b>");
+comments.Comments = sbComments.ToString();
+
+string strEncodeName= HttpUtility.HtmlEncode(comment.Name);
+comment.Name= strEncodedName;
+
+=> Relying on just filtering the user input, can not guarantee XSS elimination. XSS can happen in different ways and forms. MSDN documentation on XSS and its counter measures.
+
+
+Part 57 Razor views in mvc
+-------------------------------------------
+https://www.youtube.com/watch?v=PRLGP_S9_K8
+
+
+Use @ symbol to switch between C# code and html
+@for (int i=1;i<10; i++)
+{
+	<b>@i</b>
+}
+
+Use @{} to define a code block. If we want to define some variables and perform calculation, then use case block.
+
+Use <text>
+ element or @: to switch between C# code and literal text
+
+<text>  - Even  </text>
+
+@:  - Even
+
+
+Part 58 Razor views in mvc continued
+--------------------------------------------------
+https://www.youtube.com/watch?v=dXw5C7mlfqs
+
+To comment something use @*  *@  - Multiline
+
+Keyboard shortcut
+comment ctrl+K & ctrl+C
+UnComment ctrl+K & ctrl+U
+
+
+
+@ symbold is used as code delimiter in razor views. However, razor is smart enough to recoginize the format of internet email address and not to treat the @ symbol as a code delimiter.
+
+You can also use @ symbol as escape @
+
+@@Office will print @office
+
+
+Part 59 Layout view in mvc
+--------------------------------------------------
+https://www.youtube.com/watch?v=VyQhEArGTNs
+
+What is the advantage of using _Layout.cshtml view?
+Layout views provide the advantage of maintaining consistent look and feel across all views in an mvc application . A typical layout view consist of
+
+Website Header
+Menus
+View Specific Content
+Website Footer
+
+Rather than having all of these sections, in each and every view, we can define them in a layout view and then inherit that look and feel in all the views.
+
+With layout views, maintaining the consistent look and feel acroass all the views becomes much easier, as we have only one layout file to modify, should there be any change. The change will then be immdediately reflected across all the views in entire application.
+
+
+-View specific title is retrieve using @ViewBag.Title
+-View specific content will be plugged-in, where RenderBody() function is called.
+  @RenderBody()
+
+-All JS/CSS files are required to be referenced in layout page only.
+
+Alt +0169 to print (c)
+
+
+
+
+
+Part 60 ViewStart in asp net mvc
+--------------------------------------------------
+https://www.youtube.com/watch?v=MxU_ugIxnTA
+
+->WE can associate a view with a layout file, we have to set Layout property of each and every view. This violates DRY (Don't Repeat Yourself) principle, and has the following disadvantages
+
+1. Redundant code
+2. Maintanance overhead. To use a different layout file, all the views need to be updated.
+
+->What is _ViewStart.cshmtl file?
+
+ASP.net MVC3, has introduced _ViewStart.cshtml. Specify the Layout property in this file and place it in the Views folder. All the views will then use the layout file that is specified in _ViewStart.cshtml. This elimitates the need to specify Layout property on each and every view, making them more clearner and maintainable.
+
+->If you want a set of views in a specific folder, to use a different layout fule, then you can include another _ViewStart.cshtml file in that specific folder.
+
+->When I use _ViewStart.cshtml file, can I still set Layout property on individual views?
+
+Yes, if you want to use a layout file that is different from what is specified in _ViewStart.cshtml.
+
+
+->Where else can I specify a layout file?
+Layout file can also be specified in a controller action method or in an action filter.
+
+public ActionResult Create()
+{
+	return View("Create", "_Layout")
+}
+Can we write some logic in "_ViewStart.cshtml"
+
+ to dynamically specify which layout file to use?
+Yes, the following code will change the layout file to use based on the browser type.
+
+If the browser is google chrom,
+then "_Layout.cshtml" layout file to use
+Else
+"_DifferentLayout.cshtml" layout file is used
+
+@{
+Layout= Request.Browser.IsBrowser("Chrome")? "~/Views/Shared/_Layout.cshtml" :
+"~/Views/Shared/_DifferentLayout.cshtml"
+}
+}
+
+
+All partial views in application are now using the layout file specified in "_ViewStart.cshtml". How do I prevent these partial views from using a layout file?
+
+Details action method below return "_Employee" partial view, and is using the layout file specified in "_ViewStart.cshtml"
+
+public ActionResult Details(int id)
+{
+Employee employee = db.Employees.Single(e=>e.Id==id);
+return view("_Employee",employee);
+
+To prevent this partial view from using the layout file, specified in "_ViewStart.cshtml", return "PartialViewResult" from the controller action method.
+
+public PartialViewResult Details(int id)
+{
+Employee employee= db.Employees.Single(e=>e.Id==id);
+return PartialView("_Employee",employee);
+}
+
+What will be the layout file extension, if VB.net is my programming language?
+.vbhtml
+
+
+
+Part 61 Named sections in layout files in mvc
+--------------------------------------------------
+https://www.youtube.com/watch?v=1KM1PE76MBg
+
+ActionViewResult
+PartialViewResult
+
+All views (Index, create, Edit, Details and Delete), we see the same navigation menu.
+
+We want to change the navigation menu dynamically. For Example, If I am on a Edit view, then I want the navigation menu to contain links for List, Details and Delete views.
+
+To define a section inside specific view, use
+
+@Section Menu
+{
+@Html.ACtionLink("List","Index")</br>
+@Html.ACtionLink("Details","Details", new {id=Model.id})</br>
+@Html.ACtionLink("Delete","Delete", new {id=Model.id})</br>
+}
+
+But where to render 
+
+this section, go to the td where menu section display
+In _Layout View
+@RenderSection(sectionName)
+
+You can mention a section required or not required (false)
+
+you check if a view define that section
+
+@if(IsSlectionDefined("Menu"))
+{
+@RemderSection("Menu",false)
+}
+else
+{
+@Html.ActionLink("Employee List","Index")
+}
+
+
+
+
+Part 62 Implementing search functionality in asp net mvc  (Important to review demo)
+---------------------------------------------------------------
+https://www.youtube.com/watch?v=Slw-gs2vcWo
+
+
+When we dont want to change the state of the data, use GET method.
+FormMethod.Get
+
+To check rows in model
+
+@if (model.count()==0)
+{
+
+}
+
+
+
+Part 63 Implement paging in asp net mvc  (Important to review demo)
+---------------------------------------------------
+https://www.youtube.com/watch?v=srN56uxw76s
+
+1) The first stelp is to install pagedlist.Mvc using NuGet package manager
+PagedList
+PagedList.MVC
+
+2) Modify the index() action method to include a parameter to pass page number and return a PagedList.
+
+In controller, along with the data query
+(......................  .Tolist().toPagedList(page??1,3));
+Here 3 is page size and 1 is start index for page
+
+Now we are return paged list show model changed to IPagedList<MVCDemo.Models.Employee> in view
+
+and printing model becomes
+model=>model.First.Name();
+
+Add reference to (in view)
+@using PagedList
+@using PagedList.Mvc
+
+
+3) finally display page number for paging using PagedListPager helper
+@Html.PagedListPager(Model, page=>Url.Action("Index", new {page}))
+
+This generates 3 pages
+
+
+The below code will retain the search parameter when search result is produced.
+
+@Html.PagedListPager(Model, page=>Url.Action("Index", new
+{page,
+	searchBy=Request.QueryString["searchBy"],
+	search=Request.QueryString["search"]
+}))
+
+
+
+PagedListRenderOption objects specify several display parameter
+
+Current page and total number of pages to display using PagedListRenderOption
+
+DisplayPageCountAndCurrentLocation
+
+Total number of rows - DisplayItemSliceAndTotal
+
+
+
+Part 64 Implement sorting in asp net mvc   
+----------------------------------------------
+https://www.youtube.com/watch?v=xD-33-6GLYo
+
+We want to support bi-directional sorting by Name and Gender columns. Here's the requirement
+
+1) Name and Gender columns must be clickable hyperlinks
+
+2) Clicking on the column headers should sort the data. If the data is not already sorted by the column on which you have clicked, the data should be sorted in ascending order. Clicking again on the same column should sort the data in descending order.
+
+3) By default, the data should be sorted by "Name" in ascending order.
+
+
+ViewBag.SortNameParameter = string.IsNullOrEmpty(sortBy)? "Name desc": "";
+ViewBga.SortGenderParameter= sortBy=="Gender" ? "Gender desc" : "Gender";
+
+var employee = db.Employees.AsQueryable();
+
+To use Where method, we need the data as IQueryable
+
+%20 == Space in HTML
+
+
+
+
+
+
+Part 65 Deleting multiple rows in mvc
+------------------------------------------------------
+https://www.youtube.com/watch?v=8LKFZDeoJT0
+
+Having checkbox infront of rows that allow selecting multiple checboxes and delete the record.
+
+
+Part 66 Check uncheck all checkboxes with another single checkbox using jquery
+--------------------------------------------------------------------
+https://www.youtube.com/watch?v=I0-VMKCDOHQ
+
+
+Jquery example for select all, unselect all, count selected, confirm box to delete.works well with table data and header checkbox.
+
+
+
+
+Part 67 Action selectors in mvc
+---------------------------------------------------------------------
+https://www.youtube.com/watch?v=lGoJtvAp5M8
+
+
+An action is a public method inside a controller. These action method respond to URL request. Here localhost is name of the server, MVCDemo is name of the project, Home is the name of the controller and index is the name of the method.
+
+Action Selectors are attributes that can be applied to an action method in a controller and are used to control or influence which action method gets invoked.
+
+ActionName Selector: this action selector is used when you want to invoke an action method with a different name, than what is already given to the action method.
+
+/Home/Index will invoke
+public class HomeController : Controller
+{
+	public string Index()
+	{
+		return "Index action method invoked";
+	}
+}
+
+
+/Home/List will invoke
+public class HomeController : Controller
+{
+	[ActionName("List")]
+	public string Index()
+	{
+		return "Index action method invoked";
+	}
+}
+
+Once you decorate then you need to use the actionName to invoke. Can not name as index as similar to action method name.
+
+
+[HttpPost] is example of action selector
+
+AcceptVerbs selector : Use this selector, when you want to control, the invocation of an action method based on the request type.
+[AcceptVerbs(HttpVerbs.Get)]
+[AcceptVerbs(HttpVerbs.Post)]
+or its shortcut as
+[HttpGet]
+[HttpPost]
+
+....
+
+The default is GET. So, if you don't decorate an action method with any accept verb, then, by default, the method responds to GET request.
+
+
+
+
+Part 68 What is the use of NonAction attribute in mvc
+----------------------------------------------------------------
+https://www.youtube.com/watch?v=ipyLkt4gKG8
+
+What is the use of NonAction attribute in MVC
+Or 
+How do you restrict access to public method in a controller
+
+By Default all public method inside the controller respond to a URL request. But to prevent a public method from accessing through URL use, [NonAction] attribute.
+
+An action method is a public method in a controller that can be invoked using a URL.
+
+So, by, Default, if you have any public method in a controller then it can be invoked using a URL request. To restrict access to public methods in a controller, NonAction Attribute can be used.
+
+
+Another way to restrict access to methods in a controller, is by making them private.
+
+In general, its a bad design to have a public method in a controller that is not an action method. If you have any such method for performing business calculations, it should be somewhere in the model and not in the controller.
+
+However, if for some reasons, if you want to have 
+public methods in a controller and you don't want to to treat them as actions, then use NonAction attribute.
+
+
+Part 69 Action filters in mvc
+-----------------------------------------------------------------------------
+https://www.youtube.com/watch?v=U544K1HL560
+
+->What are the action filters in asp.net MVC?
+Action Filters are attributes that can be applied either on a controller action method or on a controller. When applied at the controller level, they are applicable for all actions within that controller. aCtion filters allow us to add, pre and post processing logic to an action method. This means, they allow us to modify the way in which an action is executed.
+
+->Name of  few commonly used action filters?
+Authorize
+ChildActionOnly
+HandleError
+OutputCache
+RequireHttps
+ValidateInput		e.g. [ValidateInput(false)]
+ValidateAntiForgeryToken
+
+->Can you create a custom action filter in MVC?
+Yes, we can do it.
+
+
+
+Part 70 Authorize and AllowAnonymous action filters in mvc
+----------------------------------------------------------------
+https://www.youtube.com/watch?v=ColwQX-dRJY
+
+Authorize Attribute:
+In ASP.net MVC, by default, all the controller action methods are accessible to both annonymous and authenticated users. If you want action methods, to be available only for authenticated and authorized users, then use [Authorize] attribute.
+
+
+AllowAnonymous Attribute:
+AllowAnonymous attribute is used to skip authorization enforced by Authorize attribute.
+
+These attributes can be applied to action method level or controller level or globally.
+
+Under IIS-> Authentication, you can allow anonymous and windows authentication.
+
+
+
+
+
+Part 71 childactiononly attribute in mvc
+----------------------------------------------
+https://www.youtube.com/watch?v=OmLnOOCy6_U
+
+
+You can pass an action to view of another controller using
+@Html.Action("Countries", new { countryNames= new List<string>(){"Us", "UK","India"}})
+
+[NonAction] attributed action method can not be called like above.
+
+The solution is to use [ChildActionMethod]
+
+
+Any action method that is decorated with [ChildActionOnly] attribute is a child action method.
+
+Child action methods will not respond to URL requests. If an attempt is made, a runtime error will be thrown stating-Child action is accessible only by a child request.
+
+Child action methods can be invoked by making child request from a view using "Action()" and "RenderAction()" html helpers.
+
+RenderAction adds directly to the output stream and return void.
+
+To invoke this method inside view
+@{
+Html.RenderAction("Countries", new {countryNames= new List<string>() {"US", "UK"}});
+}
+
+
+Mandatory to put ; at end.
+
+
+
+An action method does not need to havef [ChildActionOnly] attribute to be used as a child action, but use this attribute to prevent if you want to prevent the action method from being invoked as a result of a user request.
+
+Child actions are typically associated with partial views, but this is not compulsory.
+
+Child action methods are different from NonAction methods, in that NonAction methods cannot be invoked using Action() or RenderAction() helpers.
+
+Using child action methods, it is possible to cache portion of a view. This is main advantage of child action methods.
+Topic - [OutputCache]
+
+
+
+
+
+Part 72 HandleError attribute in mvc
+----------------------------------------------
+https://www.youtube.com/watch?v=nNEjXCSnw6w
+
+HandleErrorAttribute is used to display friendly error pages when there is an unhandled exception. This can be applied at controller, method or global level.
+
+To enable custom error pages in MVC.
+1) Turn on CustomErrors in Web.Config. 
+<customErrors mode="On">
+</customErrors>
+
+Modes are on|off|remote
+
+Under <System.web> section
+
+2) Add Error.cshtml view to the "Shared" folder
+
+We did not apply HandleError attribute anywhere. So hopw did all this work?
+
+HandleErrorAttribute is added to the GlobalFilters collection in global.asax. When a filter is added to the GlobalFilters collection, then it is applicable for all controllers and their action methods in the entire application.
+
+protected void Application_Start()
+{
+
+...
+FilterConfig.RegisterGlobalFilters(globalFilters.Filters);
+
+}
+
+
+
+Is the friendly error page displayed for HTTP status code 404?
+No, by default.
+
+1. Add "ErrorController" to controllers folder
+public class ErrorController : Controller
+{
+	public ActionResult NotFound()
+	{
+		return View();
+	}
+}
+
+2) Add NotFound.cshmtl view to the "Shared" folder
+3) Change "customErrors" element in web.config as shown below
+
+<customErrors mode="On">
+	<error statusCode="404" redirect="~/Error/NotFound"/>
+</customErrors>
+
+
+Part 73 OutputCache attribute in mvc
+-------------------------------------------------------------
+https://www.youtube.com/watch?v=DBzSh9nBEQQ
+
+
+OutputCacheAttribute is used to cache the content returned by a controller action method, so that, the same content does not need to be generated each and every time the same controller action is invoked.
+
+
+//The output of the Index() action method will be cached for 10 seconds
+[OutputCache(Duration=10)]
+public ActionResult Index()
+{
+	return view(db.Employees.ToList());
+}
+
+//Child actions can be used to implement partial caching (portion of a view),
+//although not necessary. In this case, even if the childActionOnly attribute is //removed a portion of the view is cached as expected.
+
+[ChildActionOnly]
+[OutputCache(Duration=10)]
+public string GetEmployeeCount()
+{
+	return "Employee Count = " + db.Employees.Count().ToString() +
+		"@" + DateTime.Now.ToString();
+}
+
+
+
+Cached data is available soon to user. After cache expires data is refreshed again and
+
+
+
+
+Part 74 CacheProfiles in mvc
+-------------------------------------------------
+https://www.youtube.com/watch?v=UHePB7iUBXQ
+
+To cache the data returned by Index() action method, for 60 seconds, we should use [OutputCache] attribute.
+
+[OutputCache(Duration=60)]
+
+As OutputCache settings are specified in code, the following are the disadvantages
+1) If you have to apply the same cache settings, to several methods, then the code needs to be duplicated.
+
+2) Later, if we have to change these cache settings, then
+ we need to change them at several places. Maintaining the code becomes complicated. Also, changing the application code required build and re-deployment.
+
+To overcome these disadvantages, cache settings can be specified in web.config file using cache profiles.
+
+In <system.web>, we can provide the cache profile
+<caching>
+<outputCacheSettings>
+<outputCacheProfiles>
+	<add name="1MinuteCache" duration="60" varyByParam="none">
+</outputCacheProfiles>
+</outputCacheSettings>
+</caching>
+
+
+In the controller action method,use this as
+
+[OutputCache(CacheProfile="1MinuteCache")]
+
+
+The advantages of using cache profiles is that
+1) Uou have one place to chagne the cache settings. Maintainability is much easier.
+2) Since the changes are done in web.config, we need not build and redeploy the application.
+
+Using Cache profiles with child action methods:
+
+[ChildActionOnly]
+[OutputCache(CacheProfile="1MinuteCache")]
+public string GetEmployeeCount()
+{
+	return "Employee Count" + db.Employees.Count().ToString();
+}
+
+
+When Cache profiles are used with child action methods, you will get an error - Duration must be a positive number.
+
+To make cache profiles work with child action methods, create a custom OutputCache attribute
+
+[Codes...]
+
+
+Use PartialCacheAttribute on the child action method, and pass it the name of the cache profile in web.config.
+
+
+--> To read anything from the web.config file use the class WebconfigurationManager
+
+
+
+Part 75 RequireHttps attribute in mvc
+------------------------------------------------------------
+https://www.youtube.com/watch?v=LJQmVaUseCk
+
+[RequireHttps] attribute forces an unsecured HTTP request to be re-sent over HTTPS.
+
+[RequireHttps]
+public string Login()
+{
+	return "This method should be accessed only using HTTPS protocol";
+}
+
+RequireHttps attribute can be applied to a controller as well. In this case, it is applicable to all action methods with in that controller. Sensitive data such as login credentials, credit card information etc., must always be transmitted using HTTPS. Information transmitted over https is encrypted.
+
+-> SSL Concepts - To review.
+
+
+Part 76 ValidateInput attribute in mvc
+---------------------------------------------
+https://www.youtube.com/watch?v=tFHW6GEfCIE
+
+ValidateInput attribute is used to enable or disable request validation. By default, request validation is enabled in ASP.net MVC and does not allow you to submit any HTML, to prevent XSS (Cross site scripting attacks).
+
+[HttpPost]
+//To Disable request validation
+[ValidateInput(false)]
+public string Index(string comments)
+{
+	return "Your Comment" + comments;
+}
+
+
+
+Part 77 Custom action filters in asp net mvc 
+(Important)
+--------------------------------------------------------------
+https://www.youtube.com/watch?v=w-9tQQxnx1A
+
+The custom action filer that we are going to build, should log the following information to a text file.
+1) The name of the controller
+2) The name of the action method
+3) Execution time
+4) If there is an exception, log the exception message and the time of the exception.
+
+There are 4 types of filters in ASP.net MVC
+1) Authorization filters - Implements IAuthorizationFilter. Example include AuthorizationAttribute and RequireHttpsAttribute. These filters run before any other filter.
+
+2) Action filters - Implement IActionFilter
+
+3) Result filters - Implement IResultFilter. Example include OutputCacheAttribute
+
+4)Exception filters - Implment IExceptionFilter. Example include HandleErrorAttribute.
+
+
+Custom action filter to log the action sequence and exception
+
+
+
+Part 78 Different types of ActionResult in asp net mvc
+------------------------------------------------------
+https://www.youtube.com/watch?v=Wofodc6qfNE
+
+There are different types of ActionResult that can be returned by an action method.
+
+public ActionResult Index()
+{
+	return view();
+}
+
+This is typical signature of action method and by default it return the result of type "ActionResult". ActionResult is actually ab abstract class. There are various  derived class of ActionResult  e.g. JsonResult, EmptyResult, RedirectResult, ViewResult, PartialViewResult
+
+-> ILSpy is a tool that can be used to inspect an assembly
+   http://ilspy.net
+
+Why do we have  so many sub-types?
+An action method in a controller, can return a wide range of objects. For example, an action method can return
+
+1) ViewResult
+2) PartialViewResult
+3) JsonResult
+4) RedirectResult etc.
+
+What should be the return type of an action method- ActionResult or specific derived type?
+Its good practice to return specific sub-types, but if different paths of the action method returns different subtypes, then I would return an ActionResult object.
+
+public ActionResult Index()
+{ if (condition)
+	return View();   //Return ViewResult object
+  else
+	return Json("Data"); // return JsonResult object
+}
+
+
+
+Part 79 Areas in asp net mvc
+---------------------------------------------------------
+https://www.youtube.com/watch?v=LStRA6qUAks
+
+Areas in MVC
+When you create a new asp.net MVC application, the following folders are created within the root directory.
+1) Models
+2) Views
+3) Controllers
+
+This structure is fine for simple applications, but when your application gets big and complex, maintaining your Models, Views and Controllers can get complicated. The structure of a complex asp.net MVC application can be very easily maintained using Areas.
+
+It's common for a typical job portal to have  the following functional areas.
+
+Employee Area- This functional area allow a job seeker to create their profile, upload resume, and perform a job search.
+
+Employer Area - This functional area allows a job provider to create employer profile, upload jobs and search for suitable candidates.
+
+Administrator Area - This functional area allows an administrator to configure the site and maintain.
+
+Right click on the project and create an Area with "Name of Area", this create area folder and their required controller, model and views. 
+
+Within each folder there is a file name AdminAreaRegistration.cs to register routes.
+
+All route here start with Area name
+
+But how all these areas get registered into project?
+In Global.asax file you may find a statement
+AreaRegistration.RegisterAllAreas();
+
+- Need to use overloaded function of MapRoute to specify the namespaces to route to.
+
+ namespaces: new string[]{"MVCDemo.Controller"}
+
+-To fix optimization issue, install Nuget package from console
+
+PM> Install-Package Microsoft.Web.Optimization -Pre
+
+-> To create hyperlinks and refer different area controller/action
+@Html.ActionLink("Main Area Home Page", "Index", "Home", new {area=""}, null);
+@Html.ActionLink("Employee Area Home Page", "Index", "Home", new {area="Employee"}, null);
+
+
+So, in short, areas are introduced in MVC 2, that allows us to breakdown a large complex application into a several small sections called areas.
+
+Areas can have their own set of 
+1) Models
+2) Views
+3) Controllers
+4) Routes
+
+
+
+
+Part 80 StringLength attribute in asp net mvc
+------------------------------------------------
+
+https://www.youtube.com/watch?v=tSzBNRAfpGY
+
+StringLength attribute is present in System.ComponentModel.DataAnnotations
+namespace and is used ot enforce minimum and maximum length of characters that are allowed in a data field.
+
+[MetadataType(typeof(EmployeeMetaData))]
+public partical class Employee
+{
+}
+
+public class EmployeeMetaData
+{
+[StringLength(10, MinimumLength=5)]
+[Required]
+public string Name{get;set;}
+}
+
+Points to Remember:
+1. [StringLength] attribute is present in the System.ComponentModel.DataAnnotations namespace
+2. [StringLegth] attribute verifies that a string is of certain length, but does not enforce that the property is REQUIRED. If you want to enforce that the peroperty is required use [Required] attribute
+
+
+[StringLength(10, MinimumLength=5)]
+Here as part of named parameter you can specify your custom message as error message.This does not check for blank string, so Required attribute is needed.
+
+
+
+
+
+Part 81 Range attribute in asp net mvc
+-----------------------------------------------------------
+https://www.youtube.com/watch?v=vM0H5Pj2nK8
+
+
+Range attribute checks if the value of a data field is within a specified range of values.
+
+[StringLength(10, MinimumLength=5)]
+[Required]
+[Range (1,100)]
+[Range(typeof(DateTime), 01/01/2000, "01/01/2010")]
+[DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode=true)]
+public DateTime HireDate {get; set;}
+
+When Range attribute is used with DateTime fields, the client side validation does not work as expected.
+
+
+
+
+Part 82 Creating custom validation attribute in asp net mvc
+-----------------------------------------------------------
+https://www.youtube.com/watch?v=vcX8WW4fL1s
+
+-We can not use DateTime.Now.ToShortDateString() as parameter to Range attribute for date validation, it throws an error.
+
+-to solve this, you can create custom validation attribute
+
+
+
+
+Part 83 RegularExpression attribute in asp net mvc
+----------------------------------------------------------------
+https://www.youtube.com/watch?v=7VXRVzC-WUQ
+
+@ represent a liberal.
+
+Regular expression attribute is great for pattern matching validation
+
+Validation requirement for name property
+1) Name can contain first and last name with a single space between them.
+2. Last name is optional. If last name is not present, then there shouldn't be any space after the first name.
+3. Only upper and lower case alphabets are allowed.
+
+
+This validation requirement can be easily  met using RegularExpression attribute
+[RegularExpression(@"^()[A-za-z]+[\s]{1}[A-za-z]+) |([A-Za-z)]+
+))$")]
+public string Name{get; set;}
+
+->Review Regular Expression
+
+http://gskinner.com/RegExr - to test and get list of expressions
+
+
+
+Part 84 Compare attribute in asp net mvc
+--------------------------------------------------
+https://www.youtube.com/watch?v=A79Aj2xDyc8
+
+Compare attribute is used to compare 2 properties of a model. Comparing email addresses and passwords is the common use case of Compare attribute.
+To ensure that the user has typed the correct email, lets include "Confirm Email"
+ field on the "Edit" view.
+
+
+[MetadataType(typeof(EmployeeMetaData))]
+public partial class Employee
+{
+[Compare("Email")]
+public string ConfirmEmail{get;set;}
+}
+//This compare the 
+public class EmployeeMetaData
+...
+
+
+Most of the validation attributes like Range, RegularExpression, StringLength etc. are present in
+System.ComponentModel.DataAnnotations.
+
+Compare attribute is in System.Web.Mvc.namespace
+
+-> Confirm email/password fields are generated inside the partial class. not in autogenerated class or metadata class
+.
+
+-> Metadata class is only used to associate attribute with the properties of the entities.
+
+
+
+Part 85 Enable client side validation in asp net mvc
+--------------------------------------------------------
+https://www.youtube.com/watch?v=PLe7WbsuHPU
+
+Validation attributes in asp.net mvc provides both client and server side validation.
+
+To enable client side validation
+
+Step1: Enable ClientValidation and UnobtrusiveJavaScript in web.config file
+
+<appSettings>
+<add key="ClientValidationEnabled" value="true" />
+<add key="UnobtrusiveJavaScriptEnabled" value="true" />
+</appSettings>
+Step2: Include a reference to the following JavaScript
+ files. In real-time, the references to the Javascript files are included in the master page. This avoids the need to reference them on each and every view where we need validation. The order in which the script files are referenced is also important.
+
+<script src="~/Script/jquery-1.7.1.min.js" type="text/javascript"></script>
+<script src="~/Script/jquery.validate.min.js" type="text/javascript"></script>
+<script src="~/Script/jquery.validate.unobtrusive.min.js" type="text/javascript"></script>
+
+With these 2 changes, validation should now happen on the client without a round trip to the server. If the client disables javascript in the browser, then client side validation does not work, but server side validation will continue to work as normal.
+
+
+Due to this reason, a form must have both client and server side validation.
+
+
+
+Part 86 ValidationSummary in asp net mvc
+(Important) 
+----------------------------------------------------
+https://www.youtube.com/watch?v=DhOvRZb8htU
+
+
+-> Displaying all validation errors at one place using validation summary html helper.
+
+The error display works like, display asterisk with each row and in red, at bottom all the error list. To achieve this, use
+
+Step1: Add reference to Site.css stylesheet
+<link href="~/Content/Site.css" rel="stylesheet" type="text/css">
+Step
+2: In site.css there are 3 CSS classes that control the display of validation errors. Adjust the stypes of these classes according to your needs
+field-validation-errors
+input.input-validation-error
+validation-summary-errors
+
+Step3: To display all errors at one place, use ValidationSummary() HTML helper.
+@Html.ValidationSummary(false,"Please fix the following errors and then submit the form")
+
+Step4: To display an asterisk symbol, modify ValidationMessageFor() html helper
+
+@Html.ValidationMessageFor(model=>model.Name, "*")
+
+
+
+Part 87 What is Unobtrusive JavaScript
+--------------------------------------------------
+https://www.youtube.com/watch?v=q_HuvkeEr6A
+
+-->obstrusive (plain JS) vs unobstrusive (JQuery script) JavaScript code
+
+What is Unobtrusive JavaScript?
+Unobtrusive JavaScript, is a JavaScript that is separated from the website's html markup.
+
+There are several benefits of using Unobtrusive JavaScript.
+Separation of Concern e.g. the HTML mark-up is now clean without any traces of javascript. Page load time is faster.
+
+It is also easy to update the code as all the Javascript logic is present in a separate file.
+
+We also get, better cache support, as all our JavaScript is now present in a separate file, it can be cached and accessed much faster.
+
+
+Part 88 Unobtrusive validation in asp net mvc
+-----------------------------------------------------
+https://www.youtube.com/watch?v=--0RUseW4lg
+
+Unobtrusive Validation
+To tun on client side validation and unobtrusive JavaScript for the entire application using Web.config
+<appSettings>
+<add key="ClientValidationEnabled" value="true"/>
+<add key="UnobtrusiveJavaScriptEnabled" value="true"/>
+</appSettings>
+
+Is it possible to turn these featuers on/off using code?
+Yes, the feature can be enabled or disabled in Application_Start() event handler in Global.asax
+protected void Application_Start()
+{
+	HtmlHelper.ClientValidationEnabled=true;
+	HtmlHelper.UnobtrusiveJavaScriptEnabled=true;
+}
+
+
+Is it possible to turn these feature on/off for a specific view?
+Yes, include the following code, on a view where you want to enable/disable these features
+
+@{
+	HtmlHelper.ClientValidationEnabled(true);
+	HtmlHelper.UnobtrusiveJavaScriptEnabled(true);
+}
+
+
+How is Unobtrusive validation implemented in ASP.net MVC?
+Using "data" attributes. For example, if we use "Required" attribute, on Name property and if we enable client side validation and unobtrusive JavaScript, then the generated HTML for "Name" field is as shown below.
+
+<input class="text-box single-line"
+	data-val="true"
+	data-val-required="The name field is required."
+	id= "Name"
+	name="Name"
+	type="text"
+	value="something"/>
+
+ data-val="true", indicates that the unbtrusive validation is turned on for the element
+
+data-val-required="The name field is required", indicate that the "Name" field is required and the associated error message will eb displayed if the validation fails.
+
+These data field attribute is used by Jquery plug-ins to do data validation.
+that is due to the web config setting Unobtrusive javascript enabled 
+
+
+
+
+
+
 
 
 
