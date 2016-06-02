@@ -1,0 +1,335 @@
+
+
+
+Learning SOLID Principles Using C# - Infragistics Webinar
+-----------------------------------------------------------------
+https://www.youtube.com/watch?v=Qm8vWgr37OY
+
+SOLID Principles
+
+Single Responsibility Principle
+Open-Closed Principle
+Liskov Substitution Principle
+Interface Segregation Principle
+Dependency Inversion Principle
+
+
+
+Single Responsibility Principle (SRP) 
+- Class should have only one responsibility
+- One responsibility means one reason to change the class
+- Class should have only one reason to change
+- A class must either used entirely or not at all used.
+
+
+Example -> A class that generates salary and print salary functions, means two different responsibilities. This voilates the SRP.
+
+Responsibility could be 
+- Persistebce
+- Validation
+- Notification
+- Error handling
+- Logging
+- Class Selection/ Instantiation
+- Formatting
+- Parsing
+- Mapping
+- Sending email
+- Printing etc.
+
+There are more than one function (reason for cahnge) in a class. Even if we change one of the functions, we will have to Retest the whole class. Assume we have four functions (reason for change) in a class. Change in single function will cause retesting of all four functions, which is not desirable. SRP avoids it.
+
+In this case, we need to refactor the class, CalculateSalary and PrintSalary.
+
+
+
+OCP
+-------------------
+Class should be designed in such a way that is should be
+1) Open for extension
+2) Closed for Modification
+
+Problem is like, there is a class that calculate discount. There are many discount rules and new rules coming in the system based on requirement. You may need to add new rules to existing class, that modify the class and it need to be tested again for better design. This violates OCP principle.
+
+- Solution like create an interface for this and extend the interface for each rule as separate class
+
+
+***Good to have implemented the unitTesting without creating new project.
+https://www.youtube.com/watch?v=Qm8vWgr37OY   (25 min)
+
+
+
+LSP
+---------------
+(The Liskov Substitution Principle (LSP, lsp) is a concept in Object Oriented Programming that states: Functions that use pointers or references to base classes must be able to use objects of derived classes without knowing it.)
+
+"objects in a program should be replaceable with instances of their subtypes without altering the correctness of that program"   
+
+"it means that we must make sure that new derived classes are extending the base classes without changing their behavior" 
+
+
+
+
+Class should be designed in such a way that -
+
+-object of derived class should able to replace object of the base class without bringing any error in the system or modifying the behavior of the base class.
+
+- If S is Subset of T then, object of T (base class) could be replaced by object of S (child class) without impacting the program and bringing any error in the system.
+
+
+Classical Rule for Inheritance
+IS - A relationship
+
+LS Principle
+is-substitute for relationship
+
+
+
+Example
+
+Question : Square is a Rectangle ?
+Answer : Yes
+
+There is a problem when Square class inherit from the Rectangle class as there is height=width in Square that is not true for rectangle. To overcome this, make another base class Quadrilaterals
+
+public class Quadrilaterals
+{
+    public virtual int Height { get; set; }
+    public virtual int Width { get; set; }
+    public int getArea()
+    {
+        return Height * Width;
+    }
+} 
+
+Now change the inheritance hierarchies  by making it base class.
+
+public class Rectangle :Quadrilaterals
+{
+    
+    public override int Width
+    {
+        get { return base.Width; }
+        set { base.Width = value; }
+    }
+    public override int Height
+    {
+        get { return base.Height; }
+        set { base.Height = value; }
+    }   
+    
+} 
+
+
+// In an "is a" relationship, the derived class is clearly a                       //kind of the base class
+public class Square : Quadrilaterals  
+{
+    public override int Height
+    {
+        get { return base.Height; }
+        set { SetWidthAndHeight(value); }
+    }
+
+    public override int Width
+    {
+        get { return base.Width; }
+        set { SetWidthAndHeight(value); }
+    }
+
+    private void SetWidthAndHeight(int value)
+    {
+        base.Height = value;
+        base.Width = value;
+    }
+} 
+
+
+Now our factory method also changes .
+
+public Quadrilaterals QuadrilateralsFactory()
+   {
+       return new Square();
+   }
+   public void AreaOfQuadrilateral()
+   {
+       Quadrilaterals r = QuadrilateralsFactory(); // Returns the Quadrilaterals type object
+       r.Height=7;
+       r.Width=3;
+       r.getArea();
+   }
+
+
+and the program call them as
+
+Quadrilaterals r = new Rectangle();
+       r.Height=7;
+       r.Width=3;
+       r.getArea();
+
+       Quadrilaterals r = new Square();
+       r.Height = 7;
+       r.Width = 3;
+       r.getArea();
+
+
+
+-> virtual member of a parent class can be overridden inside the derived class using override keyword.
+
+
+Design pattern video
+https://www.youtube.com/watch?v=YDobmucohqk
+
+
+
+
+
+
+
+
+ISP
+------------------------
+
+“The interface-segregation principle (ISP) states that no client should be forced to depend on methods it does not use.”
+
+ISP splits interfaces which are very large into smaller and more specific ones so that clients will only have to know about the methods that are of interest to them.
+Such shrunken interfaces are also called role interfaces.
+ISP is intended to keep a system decoupled and thus easier to refactor, change, and redeploy.
+
+
+
+Here comes that:
+
+Break down the fat interface to smaller and meaningful role interfaces.
+In the above example, let the IMachine interface contain all the broken down interfaces Smile | :)
+Inject the implementations of smaller interfaces to Machine class (Dependency Injection).
+
+
+
+DIP - Dependency Inversion Principle
+-----------------------------------------
+
+Definition
+
+A. High-level modules should not depend on low-level modules. Both should depend on abstractions.
+B. Abstractions should not depend upon details. Details should depend upon abstractions.
+
+
+Presentation Layer ->Business Layer -> Data Layer
+
+
+
+A class should not be dependent upon concrete implementation, but it should dependent upon interface exposed.
+https://www.youtube.com/watch?v=osYP895b-D8
+
+
+
+
+First Topic - SOLID
+---------------------------------------------------------------
+https://www.youtube.com/watch?v=7_zyr366zOM&list=PL8m4NUhTQU48oiGCSgCP1FiJEcg_xJzyQ
+
+----------------------------------------------------------------------------------
+
+CSharp Basics
+-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Virtual, Override and New keyword
+-----------------------------------------
+
+
+Virtual Keyword
+
+Virtual keyword is used for generating a virtual path for its derived classes on implementing method overriding. Virtual keyword is used within a set with override keyword. It is used as:
+
+// Base Class
+    class A
+    {
+        public virtual void show()
+        {
+            Console.WriteLine("Hello: Base Class!");
+            Console.ReadLine();
+        }
+    }
+
+
+Override Keyword
+
+Override keyword is used in the derived class of the base class in order to override the base class method. Override keyword is used with virtual keyword, as:
+
+// Base Class
+    class A
+    {
+        public virtual void show()
+        {
+            Console.WriteLine("Hello: Base Class!");
+            Console.ReadLine();
+        }
+    }
+
+// Derived Class
+
+    class B : A
+    {
+        public override void show()
+        {
+            Console.WriteLine("Hello: Derived Class!");
+            Console.ReadLine();
+        }
+    }
+
+
+New Keyword
+
+New keyword is also used in polymorphism concept, but in the case of method overloading So what does overloading means, in simple words we can say procedure of hiding your base class through your derived class.
+
+It is implemented as:
+
+class A
+    {
+        public void show()
+        {
+            Console.WriteLine("Hello: Base Class!");
+            Console.ReadLine();
+        }
+    }
+
+    class B : A
+    {
+        public new void show()
+        {
+            Console.WriteLine("Hello: Derived Class!");
+            Console.ReadLine();
+        }
+    }

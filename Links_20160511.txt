@@ -2338,6 +2338,325 @@ that is due to the web config setting Unobtrusive javascript enabled
 
 
 
+Part 89 Remote validation in asp net mvc
+--------------------------------------------------
+https://www.youtube.com/watch?v=Ll8VtDRj8L4
+
+To check for duplicated record, we can use Remote Attribute.
+
+Remote validation in ASP.net MVC
+Sometimes, to check if the field value is valid, we may need to make a database call. A classic example of this is the user registration page. To register a user, we need a unique username. So, to check, if the username is not taken already, we have to make a call to the server and check the database table. RemoteAttribute is useful in situation like this.
+
+When a user provides a username that already exists, the associated validation error message should be displayed immediately as shown below.
+
+
+-Create a function to check IsUserNameAvailable(string UserName)
+return !db.Users.Any(user=> user.UserName==UserName);
+-Validation need to be done at client side, so return Json Result - JsonResult
+using JsonRequestBehaviour.AllowGet
+- this method need to hookup with class user.
+- can not make any change to generated partial class user in EF
+- Then add a class user.cs that is again a partial class
+- there is one more class UserMetaData that contain the metadata for user class
+- Metadata type attribute is present tin System.ComponentModel.DataAnnotations.
+- Decorate the userName property with Remote method
+  [Remote("IsUserNameAvailable","Home",ErrorMessage="USerName already in use")]
+- Add script file to the view file of the method.
+- Add CSS file to the view file.
+- To make it work, the name of the parameter in remote method must match the field of the class in View.
+- Also make sure in web config ClientSideValidation and UnobtrusiveJavaScriptEnabled is true.
+-Remote attribute only work when JavaScript is turned on for the browser.
+
+Part 90 Remote validation in mvc when javascript is disabled
+----------------------------------------------------------------------
+https://www.youtube.com/watch?v=9BMZkyukz0s
+
+-Remote attribute only work when JavaScript is enabled for the browser.
+If the end user disables JavaScript on his/her machine then the validation does not work. This is because RemoteAttribute requires JavaScript to makes an asynchronous  AJAX call to the server side validation method. As a result, the user will be able to submit the form, bypassing the validation in place. This is why it is always important to have server side validation.
+
+To make server side validation work, when JavaScript is disabled, there are 2 ways
+1) Add model validation error dynamically in the controller action method
+2) Create Custom remote attribute and override IsValid method
+
+Disable JavaScript in the browser and test the application. Notice that, we don't get client side validation, but when you submit the form, server side validation still prevents the user from submitting the form, if there are validation errors.
+
+However, delegating the responsibility of performing validation, to a controller action method violates separation of concerns within MVC. Ideally all validation logic should be  in the Model. Using validation attributes in mvc models, should be the preferred method for validation.
+-Creating  a custom attribute and overriding IsValid() method
+
+
+
+In Post event of Create method
+//Add Model Validation Error Dynamically
+if (db.Users.Any(x=>x.UserName==user.UserName))
+{
+	ModelState.AddModelError("UserName", "UserNmae is already in use");
+}
+
+This method turns the ModelState.Isvalid to false
+
+this violates the principal of Separation of concern - All validation logic must be in model.
+
+
+Part 91 Create a custom remote attribute and override IsValid) method
+--------------------------------------------------------------------------
+https://www.youtube.com/watch?v=qopOqppDwc4
+
+
+*Creating custom remote attribute
+- Create a class file RemoteClientServerAttribute that inherit from RemoteAttribute (refer System.Web.Mvc, 
+refer System.ComponentModel.DataAnnotations and System.Reflection
+- Overwrite the IsValid method
+- Reflection is used to get the name of the project and name of the controller.
+ or assembly information
+
+- get all controller in Type variable
+- controller.GetMethods return all methods
+- Store the method in MethodInfo class object
+- This custom validation will be performed both at client side and server side
+- This is a good practical example of using Reflection in real life project.
+
+
+
+Part 92 Ajax with asp net mvc
+------------------------------------------------------
+https://www.youtube.com/watch?v=B59skvlroyc
+
+ASP.net AJAX enables a Web application to retrieve data from the server asynchronously and  to update portions of the existing page. So these, partial page updates make web application more responsive and hence improves user experience.
+
+@Ajax.ActionLink("All", "All", new AjaxOptions
+	{
+	HttpMethod = "GET",
+	UpdateTargetId ="divStudents",
+	InsertionMode= InsertionMode.Repalce  // can be ReplacAfter or Before
+	})
+
+JavaScript files required for AJAX to work
+jquery-1.7.1.min.js
+jquery.unbtrusive.ajax.min.js
+
+Controller action method returns a PartialViewResult, as we need to update a portion of the page.
+
+public PartialViewResult All()
+{
+	List<Student> model=db.Students.ToList();
+	return PartialView("_Student",model)
+}
+
+
+
+
+Part 93 What is Ajax and why should we use it
+----------------------------------------------
+https://www.youtube.com/watch?v=9JJXZfVrBUs
+
+What is AJAX?
+AJAX stands for Asynchronous JavaScript And XML and enable web applications to retrieve data from the server asynchronously. Web application using AJAX enables partial page updates, i.e. only the related section of the page is updated, without reloading the entire page.
+
+Advantages of AJAX
+1) AJAX applications are non blocing. As AJAX request are asynchronous, the user doesn't have to wait for the request processing to complete. Even while the request is still being processed by the server, the application remains responsive and the user can interact with the application. When the request processing is complete, the user interface is automatically updated. This is not the case with synchronous requests. The user interface is blocked and the user can not do anything else until the request has completed processing.
+
+2) Better performance and reduced network traffic. AJAX enables an application to send and receive only the data that is required. As a result, there is reduced traffic between the client and the server and better performance.
+
+3) No Screen flicker. An AJAX response consists of only the data that is relevant to the request. As a result, only a portion of the page is updated avoiding full page refresh and screen flickers.
+
+Diadvantages of AJAX
+1) AJAX requests can not be bookmarked easily
+2) AJAX relies on JavaScript. If JavaScript is disabled, AJAX application won't work
+3) Harder to debug.
+4) Search engine like Google, Bing, Yahoo etc cannot index AJAX pages.
+
+Applications of AJAX
+1) Many websites like Google, bing, youtube, yahoo use AJAX to implement AutoComplete feature
+2) Gmail use AJAX to implement AutoSave feature
+3) Gmail use AJAX to implement RemoteValidation i.e. to validate if a username is already in use, when creating a Gmail account.
+4) Facebook use AJAX, to load data as you keep scrolling down.
+
+AJAX is generally used to implement features like
+1) AutoComplete
+2) AutoSave
+3) Remote Validation etc.
+
+
+
+Part 94 Providing visual feedback using LoadingElementId AjaxOption
+--------------------------------------------------------
+https://www.youtube.com/watch?v=a5ysx-LWWOI
+
+One problem with partial page updatesis that, they dont provide any visual feedback if the request is taking a long time to process. With full page postbacks, we dont have this problem, because the entire page is posted to the server and hence the user knows something is happening.
+
+For example, lets say a request in our AJAX enabled application takes 10 seconds to complete. When the user clicks the bottim and if we don't provide him with any visual feedback that is request is being processed, the user may think the website is not working and he may click the button again. So, it is very important that we provide some visual feedback.
+
+To provide visual feedback to the user, use LoadingElmentID AJAXOption
+
+new AjaxOptions()
+{
+	HttpMethod= "GET",
+	UpdateTargetId = "divStudents",
+	InsertionMode= InsertionMode.Replace,
+	LoadingElementId="divloading"
+})
+
+<div id="divloading" style="display:none;">
+	<img src="~/Images/spinner.gif"/>
+</div>
+
+For animated spinner GIF image
+http://spiffygif.com
+
+
+
+
+Part 95 OnBegin, OnComplete, OnSuccess and OnFailure properties of AjaxOptions class-------------------------------------------------------------------------
+https://www.youtube.com/watch?v=js4xqfaC2A8
+
+
+
+Using the following 4 properties of the AjaxOptions class, we can associate JavaScript functions that get called on the client at different stages of an AJAX request/response cycle.
+
+1) OnBegin - The associated JavaScript function is called before the action method is invoked
+
+2) OnComplete - The associated JavaScript function is invoked after the response data has been instantiated but before the page is updated.
+
+
+3) OnSuccess - The associated JavaScript function is invoked after the page is completed.
+
+4) OnFailure - The associated JavaScript function is invoked if the page update fails.
+
+
+
+
+Use OnBegin clear the div for result.
+function ClearResult(){
+$("#divStudents").Empty();
+}
+
+
+
+Part 96 LoadingElementDuration property of AjaxOptions class
+------------------------------------------------------------------------
+https://www.youtube.com/watch?v=ifg_yytUAng
+
+LoadingElementDuration property is used to control the animation duration of LoadingElement.
+
+The value for LoeadingElementDuration property must be specified in milliseconds.
+
+By default, the LoadingElement fades in and fades out instead of appearing/disappearing instantly.
+
+But I noticed, irrespective of whatever duration we set, the LoadingElement was fading in and out at the same speed.
+
+
+
+Part 97 Implement autocomplete textbox functionality in mvc
+------------------------------------------------------------------
+https://www.youtube.com/watch?v=quQgUNteWxY
+
+AutoComplete functionality using JQuery widget
+1) First download autocomplete widget from jQueryUI.com
+2) Move the .js file to the script folder and images and css files to Content folder
+3) Add a script for autocomplete and pass required option to it e.g. source
+
+
+$("#txtSearch").autocomplete({
+source : '@Url.Action("GetStudents")',
+minLength:2
+})
+
+source option takes the action to invoke
+minLength is to define minimum text to invoke the search.
+
+
+
+
+Action method to get list of names based on search text
+
+public JsonResult GetStudents(string term)
+{
+	SampleDbContext db= new SampleDbcontext();
+	List<string> students;
+
+	students= db.Students.Where(x=>x.Name.StartWith(term))
+		    .Select(y=> y.Name).ToList();
+
+	return Json(students, JsonRequestBehavior.AllowGet);
+}
+
+
+
+
+
+Part 98 What is JavaScript minification
+----------------------------------------------------------
+https://www.youtube.com/watch?v=3nJ023SPjJc
+
+What is JavaScript minification
+JavaScript minification is the process of reducing the size of JavaScript file, by removing comments, extra whitespaces, new line characters and using shorter variable names.
+
+What are the advantages of JavaScript minification?
+As a minified JavaScript files are very small, they will be downloaded much faster and consumes less bandwidth. Search engine like Google consider page loading time as one of the parameters to rank the pages.
+
+Is any of the functionality lost due to minification?
+No, the functionality will be exactly the same as before.
+
+Are there any tools avaialble to minify JavaScript?
+There are lots of free tools available on the web. Just Google by using the "Minify JavaScript" search term.
+
+
+
+
+
+
+- Create custom JavaScript file to check whether number is even or odd
+- Now minify the JavaScript code using available tools
+- Use jsCompressor.com
+- Paste JS code and compress it
+- Now create a new file using CustomJavaScript.min.js
+- Now use this file 
+
+
+What is the difference between jquery.js and jquery.min.js
+
+jquery.min.js is the minified version, where as jquery.js is the non-minified version. In your production website always use minified files as they downlaod faster and consume less bandwidth.
+
+What is the downside of JavaScript minification?
+They are harder to read and debug. However, for deployment and debugging we can use non-minified versions. Just before deployment,  minify and use the minified versions on the production environment.
+
+
+Part 99 What is CDN Content Delivery Network
+---------------------------------------------------------
+https://www.youtube.com/watch?v=MQt7w2jUmbw
+
+CDN stands for Content Delivery Network. CDN is a network of computers that exist all over the world. For example, for a web application there are 2 ways we can make the jQuery library available.
+
+1) Have a copy of the jQuery library on your web server and reference it.
+
+2) Reference the JQuery library from a CDN.(google, Microsoft or JQuery)
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" 
+          type="text/javascript">
+
+Benefits of using a CDN
+1) Caching benefits - If other web sites use jquery and if the user has already visited those websites first, jquery file is cached. If the user then visits your website, the cached jquery file is used without having the need to download it again.
+
+2) Speed Benefits- The jquery file from the nearest geographical server will be downloaded.
+
+3) Reduced network traffic - As the jQuery file is loaded from a CDN, this reduces the network traffic to your web server.
+
+4) Parallelism benefit - There is a limitation on how many components can be downloaded in parallel. This limitation is per hostname. This can be resolved as different components loaded from different server.
+
+Part 100 What if CDN is down
+------------------------------------------
+https://www.youtube.com/watch?v=6TBuenMLHck
+
+There are several benefits of referencing a resource from a CDN.  A CDN is an external resource and beyond our control. So, what if, CDN is down? How can we fall back from CDN to use local copy of jQuery.
+
+
+There is a window property to check that just after CDN download
+
+<script type="text/javascript">
+ window.jQuery || document.write('<script src="~/MVCDemo/Scripts/jquery.1.7.1.min.js">\x3C/script>')
+</script>
+
+
+\x3C is hexadecimal for <
 
 
 
@@ -2346,6 +2665,115 @@ that is due to the web config setting Unobtrusive javascript enabled
 
 
 
+------------------------------------------------------------------
+Additional Notes
+
+1) HTTP 503 Server Busy is Status code when server run out of available thread to serve the Client request.
+2) Server has thread pool (size)
+3) The maximum thread pool size been utilized is called as Thread Starvation
+4) MVC asynchronous controller, help to stop Thread starvation. The Thread starvation problem can be solved by using asynchronous actions. Whenever an MVC action executed, they must execute asynchrounously. Synchronous tied up the Thread. Asynchrouns means thread is not hold up and thread will be returned to the pool.
+
+
+public async Task<ActionResult> Index()
+{
+	return View(await db.Departments.ToListAsync());
+}
+
+
+public async Task<ActionResult> Details(int? id)
+{
+
+	if (id==null
+	{
+	return new HTTPStatusCodeResult(HttpStatusCode.BadRequest);
+	}
+	Department dept= await db.Departments.FindAsync(id);
+	if Dept==null)
+	{
+	return HttpNotFound();
+	}
+	return View(dept);
+}
+
+The create a view for the details/id controller action method.
+Create Async  CRUD operation for department table.
+
+https://www.youtube.com/watch?v=hJ_V6pAm0PE
+
+
+5) Thread.Sleep(10000) to stop execution to 10 seconds
+6) Visual Studio Load Test
+7) How to use LoadTest/WebTest using Visual Studio 2088/2010?
+
+
+8) Use [ValidateAntiForgeryToken] attribute for security
+
+9) Async, await. Many methods do not immediately return. A method may need to query an external source. This takes time—and other code could run.
+With async and await, we formalize and clarify how asynchronous, non-blocking methods begin and end. An async method can return only void or a Task.
+Task:
+A Task returns no value (it is void). A Task<int> returns an element of type int. This is a generic type.
+
+Note:
+An async method will be run synchronously if it does not contain the await keyword.
+
+The return type is Task in case it was void and Task<T> where T is the return type of method.
+
+
+
+What is Task?
+Task is simply an implementation to IAsynchResult.
+
+Now when a method returns Task<T> then it is awaitable and that means you can call it using the keyword await, and that means whenever you call it using await, the execution control will come back to you immediately and there will be no impact on the responsiveness of your application.
+
+
+
+
+
+-> Non-Abstract class can not have abstract members
+-> Normal class can have Virtual members to override them inside their child classes
+-> Abstract class public (normal) properties can not be called in child classes using base.PropertyName. 	
+	-You must mark them virtual.
+	- Abstract member are not accessed using base
+	- Warning if you define abstrat method body
+	- 
+- Use override (overriding) or new (hiding) if you redefine in derived classes
+
+
+
+-> cannot instantiate the Abstract class.
+-> Object of abstract class can be created and instantiated with constructor of derived class
+ Quadrilaterals q = new Rectangle();
+
+-> Parent class can be initialize with the constructor of the child class
+? Yes
+   - If you override the method then method/properties of the child class will be       referenced
+   - If not overridden inside the child class, methods/properties of the base 	class will be called
+
+
+-> Derived class can not be initialize with the constructor of the base class
+
+   Implicit conversion not possible, explicit conversion required.
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+AngularJS
+https://goo.gl/WMhWbF
 
 
 

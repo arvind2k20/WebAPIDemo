@@ -1,0 +1,655 @@
+
+Design Pattern
+-------------------
+Design Patterns provide standardized and efficient solutions to software design and programming problems that are re-usable in your code. Software Architects and developers use them to build high quality robust applications.
+
+Creational Patterns
+-------------------
+Abstract Factory Pattern: Create instances of classes belonging to different families
+Builder Pattern: Separate representation and object construction
+Factory Method Pattern: Create instances of derived classes
+Prototype Pattern: Clone or copy initialized instances
+Singleton Pattern: Class with only one single possible instance
+
+
+Structural Patterns
+-------------------
+Adapter Pattern: Match interfaces of classes with different interfaces
+Bridge Pattern:: Separate implementation and object interfaces
+Composite: Simple and composite objects tree
+Decorator: Dynamically add responsibilities to objects
+Facade: Class that represents subclasses and subsystems
+Flyweight: Minimize memory usage by sharing as much data as possible with similar objects
+Proxy: Object that represents another object
+
+
+Behavioral Patterns
+-------------------
+Chain of Responsibility: Pass requests between command and processing objects within a chain of objects
+Command: Encapsulate a method call as an object containing all necessary information
+Interpreter: Include language elements and evaluate sentences in a given language
+Iterator: Give sequential access to elements in a collection
+Mediator: Encapsulates and simplifies communication between objects
+Memento: Undo modifications and restore an object to its initial state
+Observer: Notify dependent objects of state changes
+State: Change object behavior depending on its state
+Strategy: Encapsulate algorithms within a class and make them interchangeable
+Template Method: Define an algorithm skeleton and delegate algorithm steps to subclasses so that they may be overridden
+Visitor: Add new operations to classes without modifying them
+
+There are also many other types of patterns such as: Parallel Patterns, SOA Patterns, Enterprise Architecture Patterns, etc… So if you work in the respective area don’t hesitate to look up patterns that may help you to be more efficient and build better applications.
+
+
+
+
+
+Design Pattern
+----------------------------------------------
+https://www.youtube.com/watch?v=YDobmucohqk
+
+
+1) Difference between these terms
+-Design Pattern   (Code level) - Factory, Iterator, Singleton
+-Architecture Pattern (MVC, MVVM, N-Tier)
+-Architecture Style (Principles - REST that follow HTTP protocol)- REST, SOA, IOC
+
+
+Design pattern is time tested solution for software architecture problems.
+(Design patterns are time tested practices for OOP problems)
+
+- Solving Object Oriented Programming problems
+
+There are 3 types of design principal that deals with different OOPs problem
+-------------------------------------------------- 
+OOP Phase			- Design Pattern category
+Template/Class Creation problem - Structural design pattern
+Instantiation problem		- Creational design pattern
+Runtime problems		- Behavioral design pattern
+
+
+
+
+
+
+
+
+Singleton Design Pattern
+--------------------------------
+Q : Difference between the Singleton pattern and Static class?
+
+Basic need: Think, there is a hit counter in any web application. (Yes I know you have already seen many examples like this). Now, by nature when a visitor hits a web application it will increase by one. This is one scenario where we can implement the Singleton Design Pattern.
+
+Or think about another situation where you want to share a single instance of a class across various threads.
+
+Basically we can implement the singleton pattern in one of two ways.
+1. Make the constructor private so that no one can create an object of the singleton class
+
+Have a look at the following code to understand the basic concept.
+
+using System;
+using System.Collections;
+using System.Data.SqlClient;
+
+namespace Test1
+{
+class singleTon
+{
+public static int counter = 0;
+private singleTon()
+{
+//Private constructor will not allow create instance
+}
+public static int Returncount()
+{
+return counter;
+}
+
+public static void IncreaseCount()
+{
+counter++;
+}
+}
+
+
+class Program
+{
+static void Main(string[] args)
+{
+//singletone design pattern
+Console.WriteLine("Before increase : " + singleTon.counter);
+singleTon.IncreaseCount();
+Console.WriteLine("After Increase:" + singleTon.counter);
+Console.ReadLine();
+}
+}
+}
+
+
+
+
+2. Create single instance and share across threads
+In this example we will implement a singleton class in such a way that only one instance of that class is possible and if the second request comes then it will return the previously created object only. Have a look at the following code.
+using System;
+using System.Collections;
+using System.Data.SqlClient;
+
+namespace Test1
+{
+public sealed class singleTon
+{
+public Int32 Data = 0;
+private static singleTon instance;
+private static object syncRoot = new Object(); //For locking mechanism
+private singleTon() { } //Private constructor
+
+public static singleTon Instance //Property
+{
+get
+{
+if (instance == null)
+{
+lock (syncRoot)
+{
+if (instance == null)
+instance = new singleTon();
+}
+}
+return instance;
+}
+}
+}
+
+class Program
+{
+static void Main(string[] args)
+{
+//singletone design pattern
+singleTon s = singleTon.Instance;
+s.Data = 100;
+Console.WriteLine("Data of S object : " + s.Data);
+singleTon s1 = singleTon.Instance;
+Console.WriteLine("Data of S1 object : " + s.Data);
+Console.ReadLine();
+
+}
+}
+} 
+
+Here we have defined a member called instance within the singleton class. And within the class property (yes it's also Instance, but don't be confused) we are checking whether instance is null using a condition in an if-statement. If it is null then no instance is created of this class and if it is not null then an instance has already been created and it's time to return the previously created instance.
+
+
+(Ctrl + E , Ctrl + D to format the entire document. Ctrl + E , Ctrl + F to format the selection. You can change these in Tools > Options > Environment -> Keyboard (either by selecting a different "keyboard mapping scheme", or binding individual keys to the commands "Edit.FormatDocument" )
+
+
+
+
+
+
+Factory Design Pattern
+------------------------------------------------------
+
+A factory class is a class that serves the client's demands and depending on the requirements it supplies the proper form
+
+CLIENT ->	FACTORY ->	PRODUCTS
+
+As the name implies, a factory is a place where manufacturing happens. For example, a car factory where many types of car manufacturing happens. Now you want a certain model and it's always possible to produce it from this car factory. Again your friend's taste is different from yours. He wants a different model; you can request a car factory again to bring a smile to your friend's face. OK, one thing is clear from our discussion; the factory class is nothing but a supplier class that makes the client happy by supplying their demand.
+
+
+
+
+Code flow
+-At first we have created one interface (ISupplier) that has a common method (CarSupplier) and implemented that interface within multiple classes (nano, alto, swift etc.). 
+-there is one more class called CarFactory and it is the hero of the story. inside the CarFactory class we will find the mechanism to create a car.Though, here we are producing two low-end cars (nano and alto), in the near future we can add many more models. Now here is the original beauty of the factory class.
+- CarFactory class has the mechanism to create a car
+-our factory class also supplying a different form of object depending on needs
+
+public interface ISupplier {void CarSupplier(); } 
+
+class namo : ISupplier { public void CarSupplier() { Console.WriteLine("I am nano supplier"); } } 
+class alto : ISupplier { public void CarSupplier() { Console.WriteLine("I am Alto supplier"); } }
+class CarFactory { public static ISupplier GiveMyCar(int Key) { if (Key == 0) return new namo(); else if (Key == 1) return new alto(); else return null; } }
+class Program { static void Main(string[] args) { ISupplier obj = CarFactory.GiveMyCar(0); obj.CarSupplier(); obj = CarFactory.GiveMyCar(1); obj.CarSupplier(); Console.ReadLine(); } } }
+
+How to implement a vendor-independent data access mechanism using a factory class. 
+No, we will not create our own factory class to do that.
+We will just use a Dbfactory class from the .NET library.
+"We will implement such a data access mechanism that is able to talk with various database vendors."
+Need: You have developed one software product by targeting one of your clients who uses SQLServer as their database. 
+You have designed and implemented necessary coding for SQLServer. (Yes ADO.NET code, sqlconnection, sqlcommand etc. )
+
+Now the client may say that we are not happy with SQLServer and we have decided that from now we will use Oracle as our backend database.
+Anyway what "If we develop such a data accessing mechanism that will be compatible with all database vendors"? Have a look at the following code.
+
+
+using System; using System.Collections; using System.Data.SqlClient; using System.Threading; using System.Data.Common; using System.Data; 
+namespace Test1 { 
+class Program { static void Main(string[] args) 
+{ 
+DbProviderFactory provider = null; DbConnection con = null; DbCommand cmd = null; DbDataReader rdr = null; DataTable dt = new DataTable(); 
+provider =DbProviderFactories.GetFactory("System.Data.SqlClient"); 
+con = provider.CreateConnection(); //Create Connection according to Connection Class 
+con.ConnectionString = "Data Source=SOURAV-PC\\SQL_INSTANCE;Initial Catalog=test;Integrated Security=True"; 
+cmd = provider.CreateCommand(); //Create command according to Provider try { cmd.CommandText = "select * from name"; 
+cmd.CommandType = CommandType.Text; 
+if (con.State == ConnectionState.Closed || con.State == ConnectionState.Broken) { con.Open(); cmd.Connection = con; using (con) 
+{ 
+rdr = cmd.ExecuteReader(CommandBehavior.CloseConnection); 
+while (rdr.Read()) { 
+Console.WriteLine(rdr["nametest"].ToString()); Console.WriteLine(rdr["surname"].ToString()); } } } } 
+catch (Exception ex)
+{ throw; } 
+finally { 
+//trn.Rollback(); con.Dispose(); cmd.Dispose(); 
+} 
+Console.ReadLine(); 
+} 
+} 
+}
+
+
+
+You can see that nowhere in the example we have written any database specific ADO.NET code. We have used various methods of the Dbfactory class to create an object depending on Supplier.
+
+
+Prototype Design Pattern
+----------------------------------------------
+
+As the name suggests, prototype means making a copy of something that exists.If the client demands an object that we already have then we can deliver it very quickly and at less cost. In software development there are many scenarios where the same copy of an existing object is frequently needed. So, let's clarify the basic requirement "when we need to create the same object again and again then we will implement a Prototype Design Pattern".
+
+Test obj1 = new Test();
+obj1.Name = "sourav";
+Test obj2 = obj1; // Trying to make copy in obj2
+obj2.Name = "c-sharpcorner.com";
+
+In this code we are trying to make a copy of one object into another by the following statement:
+Test obj2 = obj1;
+
+And we are thinking that one copy of obj1 is getting stored in obj2. But due to the primary concept of the object being a reference type, in other words if we initialize one object to another object then they both point to the same memory location where the actual value is present.
+
+Now this is the problem and we are sure that in this example not at all objects are created from the same copy. Then what is the solution?
+Let's use MemberwiseClone() function
+
+
+using System;
+using System.Collections;
+using System.Globalization;
+
+namespace Test1
+{
+class Test
+{
+public string Name;
+public Test CloneMe(Test t)
+{
+return (Test)this.MemberwiseClone();
+}
+}
+class Program
+{
+static void Main(string[] args)
+{
+Test obj1 = new Test();
+obj1.Name = "sourav";
+Test obj2 = obj1.CloneMe(obj1); // Trying to make copy in obj2
+obj2.Name = "c-sharpcorner.com";
+Console.WriteLine(obj1.Name);
+Console.ReadLine();
+}
+}
+}
+
+
+
+Consider that you want to create one copy of an object multiple times. For your birthday you want to send an invitation letter to your friends, now the content and sender name will remain the same whereas the recipient name will only change. In this situation we can use a prototype of the invitation card for multiple friends.
+Take another example, where one object will be created after heavy database operations (as we know, database operations are very costly) and we want that object 100 times. What if we make a clone of the same object by the Prototype Design Pattern rather than hitting the database 100 times? Good solution right?
+
+
+using System;
+using System.Collections;
+using System.Globalization;
+namespace Test1
+{
+class InvitationCard
+{
+public String To;
+public String Title;
+public String Content;
+public String SendBy;
+public DateTime Date;
+public String p_To
+{
+get { return To; }
+set { To = value; }
+}
+public String p_Title
+{
+get { return Title; }
+
+set { Title = value; }
+}
+public String p_content
+{
+get { return Content; }
+set { Content = value; }
+}
+public String p_SendBy
+{
+get { return SendBy; }
+set { SendBy = value; }
+}
+public DateTime p_Date
+{
+get { return Date; }
+set { Date = value; }
+}
+public InvitationCard CloneMe(InvitationCard obj)
+{
+return (InvitationCard)this.MemberwiseClone();
+}
+}
+class Program
+{
+static void Main(string[] args)
+{
+InvitationCard obj1 = new InvitationCard();
+obj1.p_To = "Ram";
+obj1.p_Title = "My birthday invitation";
+obj1.p_content = "Hey guys !! I am throwing a cheers party in my home";
+obj1.SendBy = "Sourav";
+obj1.p_Date = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+//Here our first object has created
+InvitationCard[] objList = new InvitationCard[5];
+String[] nameList = { "Ram", "Shyam", "Hari", "Tapan", "Sukant" };
+int i = 0;
+
+
+foreach (String name in nameList)
+{
+//objList[i] = new InvitationCard();
+objList[i] = obj1.CloneMe(obj1);
+objList[i].p_To = nameList[i];
+i++;
+}
+
+
+// Print all Invitation Card here
+
+foreach (InvitationCard obj in objList)
+{
+Console.WriteLine("To :- " + obj.p_To);
+Console.WriteLine("Title :- " + obj.p_Title);
+Console.WriteLine("Content :- " + obj.p_content);
+Console.WriteLine("Send By :- " + obj.p_SendBy);
+Console.WriteLine("Date :- " + obj.Date);
+Console.WriteLine("\n");
+}
+Console.ReadLine();
+}
+}
+
+
+
+
+
+Decorator Design Pattern (Uses Inheritance, so that derived class only takes the properties that is required by them, not all)
+-------------------------------------------
+
+
+One more very popular structural design pattern called the Decorator Design Pattern. The name itself implies that this is something related to decoration.
+
+Need:
+If there is a need to produce one object with many features but not all the features are needed all the time then the Decorator Design Pattern is useful. For example think about a car beautification shop. Where a new car goes to and according to the owner's demand the shop owner beautifies their car.
+
+Let's implement our car problem using the Decorator Design Pattern. Have a look at the following code: 
+
+using System; using System.Collections; using System.Globalization; using System.Data.SqlClient; using System.Data; 
+namespace Test1 { public class Car { public virtual void CarType() { Console.WriteLine("Simple Car"); } } 
+public class WithAC : Car { public override void CarType() { //base.CarType(); Console.Write("AC Car"); } } 
+public class WithSoundSystemAndAC : WithAC { public override void CarType() { base.CarType(); Console.WriteLine("with Sound system"); } } 
+public class WithSoundSystem:Car { public override void CarType() { //base.CarType(); Console.Write("Car with only sound system"); } }
+class Program { static void Main(string[] ags)
+{ 
+Car objCarAC = new WithAC(); objCarAC.CarType(); Console.WriteLine("\n"); Car objCarAll = new WithSoundSystemAndAC(); objCarAll.CarType(); Console.ReadLine(); } } 
+}
+
+
+
+
+Composite Design Pattern  (Implemented through Interfaces and since each class inherit from it and fully implement it, we can loop through each objects.)
+-----------------------------------------------
+The Composite Design Pattern always forms a tree structure with the objects, where each root element contains sub nodes called child nodes and child nodes contain leaf nodes (last label node). 
+Leaf nodes do not contain any elements.
+Now, in this object hierarchy we can point any node and from this node we can traverse all other nodes.
+
+
+For example, think about an employee structure of an organization. We can easily represent it by a tree structure and if we start from the CEO (the root of the organization) then we can reach leaf employees by traversing through the middle-level managers. 
+
+Take another example of a Composite Design Pattern. Think about the folder structure of your computer. Each drive contains many folders and each folder contains many subfolders and each subfolder contains many files. Here the files are nothing but the leaf nodes. A node from any drive partition you may traverse down to any file by a couple of mouse clicks.
+
+
+Why composite pattern? 
+The Composite Design Pattern is useful when individual objects as well as a group of those kinds of objects are treated uniformly.
+
+
+Let's think of a scenario where we want to draw a few shapes in the same canvas. And we will draw all the components in the same way (by calling a respective function). We will try to implement it with a small working example. Have a look at the following code:
+
+
+using System;
+using System.Collections;
+using System.Globalization;
+using System.Data.SqlClient;
+using System.Data;
+
+namespace Test1
+{
+
+interface IDraw
+{
+	void Draw();
+}
+
+class Circle : IDraw
+{
+public void Draw()
+{
+Console.WriteLine("I am Circle");
+}
+}
+
+class Square: IDraw
+{
+public void Draw()
+{
+Console.WriteLine("I am Square");
+}
+}
+
+class Oval : IDraw
+{
+public void Draw()
+{
+Console.WriteLine("I am Oval");
+}
+}
+
+class Program
+{
+static void Main(string[] args)
+{
+ArrayList objList = new ArrayList();
+IDraw objcircl = new Circle();
+IDraw objSquare = new Square();
+IDraw objOval = new Oval();
+objList.Add(objcircl);
+objList.Add(objSquare);
+objList.Add(objOval);
+foreach (IDraw obj in objList)
+{
+obj.Draw();
+}
+Console.ReadLine();
+}
+}
+}
+
+Here, we have created a draw interface and three classes are deriving from them. Now, try to match this class hierarchy with the basic structure of the Composite Design Pattern. Here the IDraw interface is the root node and since three classes are derived from it (here implemented) and all of them are child nodes. Each and every child class contains the same function definition and that's why we are able to call the Draw() function from each class within the for loop.
+
+
+
+
+
+Adaptor Design Pattern
+-----------------------------------------------------
+
+Now we will discuss a very important design pattern called "Adaptor Design Pattern".
+Why adaptor pattern? 
+A few years ago I bought a mobile phone (at that time it was a little costly and a decent one with very few features) and had been using it for a couple of years. One day I discovered that the charger for the phone was not working, I went to the mobile shop with both charger and phone. The shop checked both and told me "The charger is gone". Alas! Again I need to buy a new one. The next statement of shopkeeper made me more sorrowful, "This type of charger is out of the market. Since the model is very old, the company has stopped manufacturing it". But he continued, the solution is, you need to buy a multi-pin charger, then you can charge your mobile with that.
+
+
+Basically the Adaptor Design Pattern is relevant when two different classes talk with each other. Sometimes a situation may occur like that, you cannot change anything in an existing class and at the same time another class wants to talk with the existing class. In that situation we can implement a middle-level class called an adaptor class and by using the adaptor class both classes are able to talk with each other.
+
+
+
+In the following example we have implemented an ILaptop interface in a few laptop classes. All classes have one common function called ShowModel(). If we call the ShowModel() function then it will show the laptop brand.
+
+using System; using System.Collections; 
+namespace AdpatorDesign 
+{ 
+interface ILaptop { void ShowModel(); } 
+class HP_Laptop:ILaptop { public void ShowModel() { Console.WriteLine("I am HP Laptiop"); } } 
+class Sony_Laptop : ILaptop { public void ShowModel() { Console.WriteLine("I am Sony Laptop"); } } 
+class Compaq_Laptop : ILaptop { public void ShowModel() { Console.WriteLine("I am Compaq Laptop"); } } 
+class LaptopAdaptor :ILaptop { public void ShowModel(){} public static void ShowModel(ILaptop obj) { obj.ShowModel(); } 
+} 
+
+class Person { public void SwitchOn(ILaptop obj) { LaptopAdaptor.ShowModel(obj); } } 
+
+class Program { static void Main(string[] args) 
+{
+Person p = new Person(); 
+p.SwitchOn(new HP_Laptop()); //On HP Laptop 
+p.SwitchOn(new Compaq_Laptop()); //On Compaq laptop Console.ReadLine(); } } 
+}
+
+
+
+
+
+Bridge Pattern
+-------------------------------------
+
+As the name suggests, it makes a bridge between two components. Here the component may be two classes or any other entity. So the Bridge Design Pattern basically makes a channel between two components. And in this way it helps to create a de-couple architecture. We can communicate with two classes through the bridge component without changing existing class definitions.
+
+So if we summarize the basic need for the Bridge Design Pattern then we will see that it help us to design a de-couple architecture in the software project. It makes abstraction over implementation.
+
+
+
+Let's implement the first example In the following we implement one small example of the Bridge Design Pattern. When we are talking of bridge let's implement a simple bridge between two cities. Here instead of city we will call it node. In the example we have implemented an Inode interface in both the Node_A and Node_B class. Then in the following, the two node classes, we have defined another class called Bridge, that will communicate between two cities. The ReachTo() function of the bridge class will take us to a specific city (node). Now we are clearly seeing the Program class (Main() function) is talking with any city class (node) through the Bridge class.
+
+
+using System;
+using System.Collections;
+
+namespace BridgeDesign
+{
+public interface Inode
+{
+void Reach();
+}
+class Node_A : Inode
+{
+public void Reach()
+{
+Console.WriteLine("Rreached to node A");
+}
+}
+class Node_B : Inode
+{
+public void Reach()
+{
+Console.WriteLine("Rreached to node B");
+}
+}
+class Bridge
+{
+public void ReachTo(Inode obj)
+{
+obj.Reach();
+}
+}
+class Program
+{
+static void Main(string[] args)
+{
+Bridge br = new Bridge();
+Node_A a = new Node_A();
+Node_B b = new Node_B();
+br.ReachTo(a); //Reach to Node_A
+br.ReachTo(b); //Reach to Node_B
+Console.ReadLine();
+}
+}
+}
+
+
+
+Mail sending and notification is a very common task for a software developer. We can now send mail in various ways, for example in a new version of an old project you have developed a mail sending function in C# but in the same project
+there is another function to send mail that is written in VB6 (maybe it was written by a senior of your seniors. Ha ..Ha..) and is still working fine. Anyway, your manager said that they want to use both C# and VB versions associated with sending mail from a database (so, in total three different ways). Now, let's implement this scenario using the Bridge Design Pattern. Have a look at the following example.
+using System;
+using System.Collections;
+namespace BridgeDesign
+{
+public interface IMessage
+{
+void Send();
+}
+class CSharp_Mail : IMessage
+{
+public void Send()
+{
+Console.WriteLine("Mail send from C# code");
+}
+}
+class VB_Mail : IMessage
+{
+public void Send()
+{
+Console.WriteLine("Mail send from VB Code");
+}
+}
+class Databas_Mail : IMessage
+{
+public void Send()
+{
+Console.WriteLine("Mail send from Database");
+}
+}
+class MailSendBridge
+{
+public void SendFrom(IMessage obj)
+{
+obj.Send();
+}
+}
+class Program
+{
+static void Main(string[] args)
+{
+MailSendBridge mb = new MailSendBridge();
+CSharp_Mail objCS = new CSharp_Mail();
+VB_Mail objVB = new VB_Mail();
+mb.SendFrom(objCS); //Mail send from C# cod
+mb.SendFrom(objVB); //Mail Send from VB Code
+Console.ReadLine();
+}
+}
+}
+
+
+If you observe closely the body of the Main() function, you will find we are sending just an appropriate object to use the proper mail sending function. Here the MailSendBridge class is creating one abstraction over the implementation of the actual mail sending mechanism that was defined by a different mail sending class.
+
+
+
+
+
+
